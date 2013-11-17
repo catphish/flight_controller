@@ -214,3 +214,4 @@ class VectorFloat {
 };
 
 #endif /* _HELPER_3DMATH_H_ */
+

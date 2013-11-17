@@ -4,6 +4,8 @@
 //
 // Definitions and custom routines relating to the MPU6050
 
+#include <math.h>
+
 // MPU control/status vars
 uint8_t mpuIntStatus; // holds actual interrupt status byte from MPU
 uint8_t devStatus; // return status after each device operation (0 = success, !0 = error)
@@ -26,15 +28,20 @@ void mpuGetXY() {
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
     mpu.resetFIFO();
     Serial.println(F("FIFO overflow!"));
-  // otherwise, check for DMP data ready interrupt (this should happen frequently)
-  } else if (mpuIntStatus & 0x02) {
-    // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+  }
+  else if (mpuIntStatus & 0x02) {
+    while (fifoCount >= packetSize) {
       mpu.getFIFOBytes(fifoBuffer, packetSize);
+      fifoCount -= packetSize;
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      x = ypr[2]*X_GYRO_SENSITIVITY;
-      y = ypr[1]*Y_GYRO_SENSITIVITY;
+      x = pow(abs(ypr[2]) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[2])/ypr[2]) * GYRO_MULTIPLIER;
+      y = pow(abs(ypr[1]) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[1])/ypr[1]) * GYRO_MULTIPLIER;
+      Serial.print(x);
+      Serial.print("\t");
+      Serial.println(y);
+    }
   }
 }
+

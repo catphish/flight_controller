@@ -3,6 +3,9 @@
 //
 // Radio control interrupts
 
+long control_x_center=-1L, control_y_center=-1L, control_r_center=-1L, control_z_center=-1L;
+int control_x_count = 0, control_y_count = 0, control_z_count = 0, control_r_count = 0;
+
 long rc0_micros=0L;
 void readrc0() {
   if ( digitalRead(2) == HIGH ) {
@@ -10,9 +13,13 @@ void readrc0() {
   } else if(rc0_micros > 0) {
     long t = micros() - rc0_micros;
     if(t > 900 and t < 2200) {
-      if(control_x_center ==-1L) 
+      if(control_x_center ==-1L) {
         control_x_center = t;
-      control_x = (t - control_x_center) * X_CONTROL_SENSITIVITY;
+      } else if (control_x_count < 10){
+        control_x_center = control_x_center * 0.9 + t * 0.1;
+        control_x_count++;
+      }
+      control_x = control_x * 0.75 + (t - control_x_center) * X_CONTROL_SENSITIVITY * 0.25;
     }
   }
 }
@@ -24,9 +31,13 @@ void readrc1() {
   } else if(rc1_micros > 0) {
     long t = micros() - rc1_micros;
     if(t > 900 and t < 2200) {
-      if(control_y_center ==-1L) 
+      if(control_y_center ==-1L) {
         control_y_center = t;
-      control_y = (t - control_y_center) * Y_CONTROL_SENSITIVITY;
+      } else if (control_y_count < 10){
+        control_y_center = control_y_center * 0.9 + t * 0.1;
+        control_y_count++;
+      }
+      control_y = control_y * 0.75 + (t - control_y_center) * Y_CONTROL_SENSITIVITY * 0.25;
     }
   }
 }
@@ -38,8 +49,12 @@ void readrc2() {
   } else if(rc2_micros > 0) {
     long t = micros() - rc2_micros;
     if(t > 900 and t < 2200) {
-      if(control_z_center ==-1L) 
+      if(control_z_center ==-1L) {
         control_z_center = t;
+      } else if (control_z_count < 10){
+        control_z_center = control_z_center * 0.9 + t * 0.1;
+        control_z_count++;
+      }
       control_z = t - control_z_center;
     }
   }
@@ -52,11 +67,17 @@ void readrc3() {
   } else if(rc3_micros > 0) {
     long t = micros() - rc3_micros;
     if(t > 900 and t < 2200) {
-      if(control_r_center ==-1L) 
+      if(control_r_center ==-1L) {
         control_r_center = t;
-      control_r = t - control_r_center;
+      } else if (control_r_count < 10){
+        control_r_center = control_r_center * 0.9 + t * 0.1;
+        control_r_count++;
+      }
+
+      control_r = control_r * 0.75 + (t - control_r_center) * R_CONTROL_SENSITIVITY * 0.25;
 
     }
   }
 }
+
 

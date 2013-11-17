@@ -15,3 +15,4 @@ void bmpGetPressure() {
   while (micros() - lastMicros < barometer.getMeasureDelayMicroseconds());
   pressure = barometer.getPressure();
 }
+

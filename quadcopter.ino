@@ -17,10 +17,12 @@ bool dmpReady = false; // set true if DMP init was successful
 MPU6050 mpu;
 BMP085 barometer;
 
-#define X_CONTROL_SENSITIVITY 0.25
-#define Y_CONTROL_SENSITIVITY 0.25
-#define X_GYRO_SENSITIVITY 1000
-#define Y_GYRO_SENSITIVITY 1000
+#define X_CONTROL_SENSITIVITY 0.1
+#define Y_CONTROL_SENSITIVITY 0.1
+#define R_CONTROL_SENSITIVITY 0.2
+#define GYRO_SENSITIVITY 20
+#define GYRO_MULTIPLIER 5
+#define GYRO_CURVE 0.8
 
 Servo front_left;
 Servo front_right;
@@ -32,16 +34,15 @@ float initial_pressure;
 int32_t lastMicros;
 
 long x=0L,y=0L;
-long control_x, control_y, control_r, control_z;
-long control_x_center=-1L, control_y_center=-1L, control_r_center=-1L, control_z_center=-1L;
+long control_x=0L, control_y=0L, control_r=0L, control_z=0L;
 
 int n;
 
 void loop()
 {
-  //if (!dmpReady) return;
-  //mpuGetXY();
-  bmpGetPressure();
+  if (!dmpReady) return;
+  mpuGetXY();
+  //bmpGetPressure();
   set_velocities();
 }
 
