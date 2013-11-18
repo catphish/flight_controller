@@ -4,9 +4,9 @@
 // Motor control functions
 
 void set_velocities() {
-  //Serial.print(x, DEC);
+  //Serial.print(roll_input, DEC);
   //Serial.print(", ");
-  //Serial.print(y, DEC);
+  //Serial.print(pitch_input, DEC);
   //Serial.print(", ");
   //Serial.print(control_r, DEC);
   //Serial.print(", ");
@@ -32,21 +32,25 @@ void set_velocities() {
   rear_left.writeMicroseconds(rl);
   rear_right.writeMicroseconds(rr);
   
-  Serial.print(roll_input);
-  Serial.print("\t");
-  Serial.print(pitch_input);
-  Serial.print("\t");
-  Serial.print(roll_output);
-  Serial.print("\t");
-  Serial.print(pitch_output);
-  Serial.print("\t");
-  
-  Serial.print(fl, DEC);
-  Serial.print("\t");
-  Serial.print(fr, DEC);
-  Serial.print("\t");
-  Serial.print(rl, DEC);
-  Serial.print("\t");
-  Serial.println(rr, DEC);
+//  Serial.print(control_x);
+//  Serial.print("\t");
+//  Serial.print(control_y);
+//  Serial.print("\t");
+//  Serial.print(roll_input);
+//  Serial.print("\t");
+//  Serial.print(pitch_input);
+//  Serial.print("\t");
+//  Serial.print(roll_output);
+//  Serial.print("\t");
+//  Serial.print(pitch_output);
+//  Serial.print("\t");
+//  
+//  Serial.print(fl, DEC);
+//  Serial.print("\t");
+//  Serial.print(fr, DEC);
+//  Serial.print("\t");
+//  Serial.print(rl, DEC);
+//  Serial.print("\t");
+//  Serial.println(rr, DEC);
 }
 

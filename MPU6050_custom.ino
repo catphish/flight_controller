@@ -36,10 +36,8 @@ void mpuGetXY() {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      roll_input  = pow(abs(ypr[2] + GYRO_X_OFFSET) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[2])/ypr[2]) * GYRO_MULTIPLIER;
-      if (control_z < 300) roll_input = 0;
-      pitch_input = pow(abs(ypr[1] + GYRO_Y_OFFSET) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[1])/ypr[1]) * GYRO_MULTIPLIER;
-      if (control_z < 300) pitch_input = 0;
+      roll_input  = (ypr[2] + GYRO_X_OFFSET) * GYRO_SENSITIVITY;
+      pitch_input = (ypr[1] + GYRO_Y_OFFSET) * GYRO_SENSITIVITY;
     }
   }
 }
