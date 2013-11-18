@@ -17,10 +17,10 @@ void set_velocities() {
   //Serial.println(control_z, DEC);
 
   //float ratio =  control_z / 700.0;
-  int fl=900 + control_z + roll_output + pitch_output + control_r; // * ratio;
-  int fr=900 + control_z - roll_output + pitch_output - control_r; // * ratio;
-  int rl=900 + control_z + roll_output - pitch_output - control_r; // * ratio;
-  int rr=900 + control_z - roll_output - pitch_output + control_r; // * ratio;
+  int fl=900 + control_z - roll_output - pitch_output + control_r; // * ratio;
+  int fr=900 + control_z + roll_output - pitch_output - control_r; // * ratio;
+  int rl=900 + control_z - roll_output + pitch_output - control_r; // * ratio;
+  int rr=900 + control_z + roll_output + pitch_output + control_r; // * ratio;
   
   //if(fl > 1600) fl=1600;
   //if(fr > 1600) fr=1600;

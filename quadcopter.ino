@@ -13,8 +13,8 @@ double control_x=0L, control_y=0L, control_r=0L, control_z=0L;
 double roll_input, pitch_input;
 double roll_output, pitch_output;
 
-PID pid_roll (&roll_input,  &roll_output,  &control_x, 1.0, 0.05, 0.0, DIRECT);
-PID pid_pitch(&pitch_input, &pitch_output, &control_y, 1.0, 0.05, 0.0, DIRECT);
+PID pid_roll (&roll_input,  &roll_output,  &control_x, 0.05, 0.07, 0.03, REVERSE);
+PID pid_pitch(&pitch_input, &pitch_output, &control_y, 0.05, 0.07, 0.03, REVERSE);
 
 bool dmpReady = false; // set true if DMP init was successful
 
