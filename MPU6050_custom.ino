@@ -36,11 +36,10 @@ void mpuGetXY() {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      x = pow(abs(ypr[2]) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[2])/ypr[2]) * GYRO_MULTIPLIER;
-      y = pow(abs(ypr[1]) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[1])/ypr[1]) * GYRO_MULTIPLIER;
-      Serial.print(x);
-      Serial.print("\t");
-      Serial.println(y);
+      roll_input  = pow(abs(ypr[2] + GYRO_X_OFFSET) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[2])/ypr[2]) * GYRO_MULTIPLIER;
+      if (control_z < 300) roll_input = 0;
+      pitch_input = pow(abs(ypr[1] + GYRO_Y_OFFSET) * GYRO_SENSITIVITY, GYRO_CURVE)*(abs(ypr[1])/ypr[1]) * GYRO_MULTIPLIER;
+      if (control_z < 300) pitch_input = 0;
     }
   }
 }

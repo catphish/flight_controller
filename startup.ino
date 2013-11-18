@@ -18,14 +18,14 @@ void setup()
   #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
       Fastwire::setup(400, true);
   #endif
-  Serial.println(F("Initializing I2C devices..."));
+  //Serial.println(F("Initializing I2C devices..."));
   mpu.initialize();
 
   // verify connection
-  Serial.println(F("Testing device connections..."));
+  //Serial.println(F("Testing device connections..."));
   Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));  
   
-  Serial.println(F("Initializing DMP..."));
+  //Serial.println(F("Initializing DMP..."));
   devStatus = mpu.dmpInitialize();
   
   // make sure it worked (returns 0 if so)
@@ -37,7 +37,7 @@ void setup()
     //mpu.setYAccelOffset(1575);
     //mpu.setZAccelOffset(1788);
     // turn on the DMP, now that it's ready
-    Serial.println(F("Enabling DMP..."));
+    //Serial.println(F("Enabling DMP..."));
     mpu.setDMPEnabled(true);
 
     mpuIntStatus = mpu.getIntStatus();
@@ -57,6 +57,11 @@ void setup()
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
+  pid_pitch.SetOutputLimits(-200, 200);
+  pid_roll.SetOutputLimits (-200, 200);
+  pid_pitch.SetMode(AUTOMATIC);
+  pid_roll.SetMode (AUTOMATIC);
+  
   Serial.println("Calibrating barometer...");
   barometer.initialize();
   Serial.println(barometer.testConnection() ? "BMP085 connection successful" : "BMP085 connection failed");

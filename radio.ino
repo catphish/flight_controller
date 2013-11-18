@@ -19,7 +19,11 @@ void readrc0() {
         control_x_center = control_x_center * 0.9 + t * 0.1;
         control_x_count++;
       }
-      control_x = control_x * 0.75 + (t - control_x_center) * X_CONTROL_SENSITIVITY * 0.25;
+      if(control_z > 300) {
+        control_x = control_x * 0.75 + (t - control_x_center) * X_CONTROL_SENSITIVITY * 0.25;
+      } else {
+        control_x = 0;
+      }
     }
   }
 }
@@ -37,7 +41,11 @@ void readrc1() {
         control_y_center = control_y_center * 0.9 + t * 0.1;
         control_y_count++;
       }
-      control_y = control_y * 0.75 + (t - control_y_center) * Y_CONTROL_SENSITIVITY * 0.25;
+      if(control_z > 300) {
+        control_y = control_y * 0.75 + (t - control_y_center) * Y_CONTROL_SENSITIVITY * 0.25;
+      } else {
+        control_y = 0;
+      }
     }
   }
 }
