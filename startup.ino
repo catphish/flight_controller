@@ -11,6 +11,17 @@ void setup()
   pinMode(3, INPUT);
   pinMode(18, INPUT);
   pinMode(19, INPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+
+  PORTB=0;
+  
+  // Set up high resolution timer
+  TCCR1A = 0;
+  TCCR1B = 2;
+
   Serial.println("Initializing accelerometers...");
   #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
       Wire.begin();
@@ -57,10 +68,20 @@ void setup()
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
-  pid_pitch.SetOutputLimits(-200, 200);
-  pid_roll.SetOutputLimits (-200, 200);
-  pid_pitch.SetMode(AUTOMATIC);
-  pid_roll.SetMode (AUTOMATIC);
+  p_pitch.SetOutputLimits(PMIN, PMAX);
+  p_roll.SetOutputLimits (PMIN, PMAX);
+  p_pitch.SetMode(AUTOMATIC);
+  p_roll.SetMode (AUTOMATIC);
+  
+  i_pitch.SetOutputLimits(IMIN, IMAX);
+  i_roll.SetOutputLimits (IMIN, IMAX);
+  i_pitch.SetMode(AUTOMATIC);
+  i_roll.SetMode (AUTOMATIC);
+  
+  d_pitch.SetOutputLimits(DMIN, DMAX);
+  d_roll.SetOutputLimits (DMIN, DMAX);
+  d_pitch.SetMode(AUTOMATIC);
+  d_roll.SetMode (AUTOMATIC);
   
   Serial.println("Calibrating barometer...");
   barometer.initialize();
@@ -74,17 +95,17 @@ void setup()
   attachInterrupt(4, readrc3, CHANGE);
   delay(1000);
   Serial.println("Starting Engines...");
-  front_left.attach(8);
-  front_right.attach(9);
-  rear_left.attach(10);
-  rear_right.attach(11);
+  //front_left.attach(8);
+  //front_right.attach(9);
+  //rear_left.attach(10);
+  //rear_right.attach(11);
   
-  for(n=0;n<20;n++) {
-    front_left.writeMicroseconds(1000);
-    front_right.writeMicroseconds(1000);
-    rear_left.writeMicroseconds(1000);
-    rear_right.writeMicroseconds(1000);
-    delay(100);
-  }
+//  for(n=0;n<20;n++) {
+//    front_left.writeMicroseconds(1000);
+//    front_right.writeMicroseconds(1000);
+//    rear_left.writeMicroseconds(1000);
+//    rear_right.writeMicroseconds(1000);
+//    delay(100);
+//  }
   Serial.println("Done.");
 }
