@@ -2,7 +2,7 @@
 // by Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
 // Based on Code by Jeff Rowberg <jeff@rowberg.net>
 //
-// Definitions and custom routines relating to the MPU6050
+// Definitions and custom routines relating to the MPU6050 and DMP
 
 #include <math.h>
 
@@ -36,8 +36,10 @@ void mpuGetXY() {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+      // Get pitch and roll from DMP
       roll_input  = (ypr[2] + GYRO_X_OFFSET) * ACCEL_SENSITIVITY;
       pitch_input = (ypr[1] + GYRO_Y_OFFSET) * ACCEL_SENSITIVITY;
+      // Get gyro data from MPU
       int16_t ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       gyro_x = gx * GYRO_SENSITIVITY;
