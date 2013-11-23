@@ -68,20 +68,21 @@ void setup()
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
-  p_pitch.SetOutputLimits(PMIN, PMAX);
-  p_roll.SetOutputLimits (PMIN, PMAX);
-  p_pitch.SetMode(AUTOMATIC);
-  p_roll.SetMode (AUTOMATIC);
-  
-  i_pitch.SetOutputLimits(IMIN, IMAX);
-  i_roll.SetOutputLimits (IMIN, IMAX);
-  i_pitch.SetMode(AUTOMATIC);
-  i_roll.SetMode (AUTOMATIC);
-  
-  d_pitch.SetOutputLimits(DMIN, DMAX);
-  d_roll.SetOutputLimits (DMIN, DMAX);
-  d_pitch.SetMode(AUTOMATIC);
-  d_roll.SetMode (AUTOMATIC);
+  pid_pitch_a.SetOutputLimits(-200, 200);
+  pid_pitch_a.SetMode(AUTOMATIC);
+  pid_pitch_a.SetSampleTime(10);
+
+  pid_roll_a.SetOutputLimits (-200, 200);
+  pid_roll_a.SetMode (AUTOMATIC);
+  pid_roll_a.SetSampleTime(10);
+
+  pid_pitch_b.SetOutputLimits(-200, 200);
+  pid_pitch_b.SetMode(AUTOMATIC);
+  pid_pitch_b.SetSampleTime(10);
+
+  pid_roll_b.SetOutputLimits (-200, 200);
+  pid_roll_b.SetMode (AUTOMATIC);
+  pid_roll_b.SetSampleTime(10);
   
   Serial.println("Calibrating barometer...");
   barometer.initialize();

@@ -36,8 +36,12 @@ void mpuGetXY() {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      roll_input  = (ypr[2] + GYRO_X_OFFSET) * GYRO_SENSITIVITY;
-      pitch_input = (ypr[1] + GYRO_Y_OFFSET) * GYRO_SENSITIVITY;
+      roll_input  = (ypr[2] + GYRO_X_OFFSET) * ACCEL_SENSITIVITY;
+      pitch_input = (ypr[1] + GYRO_Y_OFFSET) * ACCEL_SENSITIVITY;
+      int16_t ax, ay, az, gx, gy, gz;
+      mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+      gyro_x = gx * GYRO_SENSITIVITY;
+      gyro_y = gy * GYRO_SENSITIVITY * -1;
     }
   }
 }

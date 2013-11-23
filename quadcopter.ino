@@ -9,36 +9,30 @@
 #include "BMP085.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 
+// RC Input
 int control_x=0, control_y=0, control_z=0, control_r=0;
+// Smoothed RC Input
 double smoothed_control_x=0, smoothed_control_y=0, smoothed_control_z=0, smoothed_control_r=0;
+// Dummy zero target
 double target = 0;
 
+// Accelerometer input
 double roll_input, pitch_input;
+// Gyro Input
+double gyro_x, gyro_y;
+// PID 1 Output
+double roll_mid, pitch_mid;
+// PID 2 Output
 double roll_output, pitch_output;
-double roll_output_p, pitch_output_p;
-double roll_output_i, pitch_output_i;
-double roll_output_d, pitch_output_d;
 
-#define PMIN -20
-#define PMAX 20
-#define IMIN -20
-#define IMAX 20
-#define DMIN -20
-#define DMAX 20
+#define PIDP 1
+#define PIDI 1
+#define PIDD 0.00
 
-//#define PIDP 0.08
-//#define PIDI 0.01
-//#define PIDD 0.015
-#define PIDP 0.01
-#define PIDI 0.005
-#define PIDD 0.005
-
-PID p_roll (&roll_input,  &roll_output_p,  &target, PIDP, 0, 0, REVERSE);
-PID p_pitch(&pitch_input, &pitch_output_p, &target, PIDP, 0, 0, REVERSE);
-PID i_roll (&roll_input,  &roll_output_i,  &target, 0, PIDI, 0, REVERSE);
-PID i_pitch(&pitch_input, &pitch_output_i, &target, 0, PIDI, 0, REVERSE);
-PID d_roll (&roll_input,  &roll_output_d,  &target, 0, 0, PIDD, REVERSE);
-PID d_pitch(&pitch_input, &pitch_output_d, &target, 0, 0, PIDD, REVERSE);
+PID pid_roll_a  (&roll_input,  &roll_mid,     &target,    PIDP, PIDI, PIDD, DIRECT);
+PID pid_pitch_a (&pitch_input, &pitch_mid,    &target,    PIDP, PIDI, PIDD, DIRECT);
+PID pid_roll_b  (&gyro_x,      &roll_output,  &roll_mid,  1, 0, 0, DIRECT);
+PID pid_pitch_b (&gyro_y,      &pitch_output, &pitch_mid, 1, 0, 0, DIRECT);
 
 bool dmpReady = false; // set true if DMP init was successful
 
@@ -49,12 +43,13 @@ bool dmpReady = false; // set true if DMP init was successful
 MPU6050 mpu;
 BMP085 barometer;
 
-#define X_CONTROL_SENSITIVITY 1
-#define Y_CONTROL_SENSITIVITY 1
-#define R_CONTROL_SENSITIVITY 1
+#define X_CONTROL_SENSITIVITY 0
+#define Y_CONTROL_SENSITIVITY 0
+#define R_CONTROL_SENSITIVITY 0
 #define GYRO_X_OFFSET  0.0129
 #define GYRO_Y_OFFSET -0.0183
-#define GYRO_SENSITIVITY 1000
+#define ACCEL_SENSITIVITY 100
+#define GYRO_SENSITIVITY 0.03
 
 //Servo front_left;
 //Servo front_right;
@@ -79,12 +74,8 @@ void loop()
   //control_z = 0;
   //control_x = control_y = 0;
 
-  p_pitch.Compute(); p_roll.Compute();
-  i_pitch.Compute(); i_roll.Compute();
-  d_pitch.Compute(); d_roll.Compute();
-
-  pitch_output = pitch_output_p + pitch_output_i + pitch_output_d;
-  roll_output =  roll_output_p  + roll_output_i  + roll_output_d;
+  pid_pitch_a.Compute(); pid_roll_a.Compute();
+  pid_pitch_b.Compute(); pid_roll_b.Compute();
 
   //bmpGetPressure();
   set_velocities();

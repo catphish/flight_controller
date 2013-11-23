@@ -17,10 +17,10 @@ void set_velocities() {
   //Serial.println(control_z, DEC);
 
   //float ratio =  control_z / 700.0;
-  int fl=1000 + smoothed_control_z - roll_output - pitch_output;// + control_r; // * ratio;
-  int fr=1000 + smoothed_control_z + roll_output - pitch_output;// - control_r; // * ratio;
-  int rl=1000 + smoothed_control_z - roll_output + pitch_output;// - control_r; // * ratio;
-  int rr=1000 + smoothed_control_z + roll_output + pitch_output;// + control_r; // * ratio;
+  int fl=1000 + smoothed_control_z + roll_output + pitch_output;// + control_r; // * ratio;
+  int fr=1000 + smoothed_control_z - roll_output + pitch_output;// - control_r; // * ratio;
+  int rl=1000 + smoothed_control_z + roll_output - pitch_output;// - control_r; // * ratio;
+  int rr=1000 + smoothed_control_z - roll_output - pitch_output;// + control_r; // * ratio;
   
   timer = micros();
   PORTB=16;
@@ -37,9 +37,9 @@ void set_velocities() {
   while(TCNT1 < rr * 2);
   PORTB=0;
   //Serial.println(micros()-timer);
-  Serial.print(roll_input);
-  Serial.print(",");
-  Serial.println(pitch_input);
+//  Serial.print(roll_input);
+//  Serial.print(",");
+//  Serial.println(pitch_input);
 //  Serial.print(",");
 //  Serial.print(roll_output_p + pitch_output_p);
 //  Serial.print(",");
@@ -65,9 +65,13 @@ void set_velocities() {
 //  Serial.print("\t");
 //  Serial.print(pitch_input);
 //  Serial.print("\t");
-//  Serial.print(roll_output);
-//  Serial.print("\t");
-//  Serial.print(pitch_output);
+Serial.print(gyro_x + gyro_y);
+Serial.print(",");
+Serial.print(roll_input + pitch_input);
+Serial.print(",");
+Serial.print(roll_mid + pitch_mid);
+Serial.print(",");
+Serial.println(roll_output + pitch_output);
 //  Serial.print("\t");
 //  
 //  Serial.print(fl, DEC);
