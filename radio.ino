@@ -41,3 +41,4 @@ void process_rc_data() {
   smoothed_control_z = smoothed_control_z * 0.9 + (control_z - 1150) * 0.1;
   smoothed_control_r = smoothed_control_r * 0.9 + (control_r - 1500) * R_CONTROL_SENSITIVITY * 0.1;
 }
+

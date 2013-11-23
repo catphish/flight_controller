@@ -271,3 +271,4 @@ float BMP085::getAltitude(float pressure, float seaLevelPressure) {
     return 44330 * (1.0 - pow(pressure / seaLevelPressure, 0.1903));
 }
 
+

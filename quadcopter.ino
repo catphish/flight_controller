@@ -10,8 +10,8 @@
 #include "Wire.h"
 
 // Settings
-#define PID_P 1
-#define PID_I 1
+#define PID_P 0.7
+#define PID_I 0.7
 #define PID_D 0.00
 #define X_CONTROL_SENSITIVITY 0.03
 #define Y_CONTROL_SENSITIVITY 0.03
@@ -19,7 +19,7 @@
 #define GYRO_X_OFFSET  0.0129
 #define GYRO_Y_OFFSET -0.0183
 #define ACCEL_SENSITIVITY 100
-#define GYRO_SENSITIVITY 0.03
+#define GYRO_SENSITIVITY 0.025
 
 // Global Variables and Objects
 int control_x=0, control_y=0, control_z=0, control_r=0;  // RC Input
@@ -59,5 +59,6 @@ void loop()
   // Wait a while between iterations
   delay(10);
 }
+
 
 
