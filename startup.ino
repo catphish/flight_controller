@@ -6,7 +6,7 @@
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Beginning takeoff sequence...");
+  //Serial.println("Beginning takeoff sequence...");
     pinMode(2, INPUT);
     pinMode(3, INPUT);
     pinMode(18, INPUT);
@@ -16,7 +16,7 @@ void setup()
     pinMode(12, OUTPUT);
     pinMode(13, OUTPUT);
 
-  Serial.println("Initializing Gyros and DMP...");
+  //Serial.println("Initializing Gyros and DMP...");
     Wire.begin();
     TWBR = 24;                       // 400kHz I2C clock
     mpu.initialize();                // Initialize MTP6050
@@ -31,7 +31,7 @@ void setup()
       packetSize = mpu.dmpGetFIFOPacketSize();
     }
 
-  Serial.println("Initializing PID loops...");
+  //Serial.println("Initializing PID loops...");
     pid_pitch_a.SetOutputLimits(-200, 200);
     pid_pitch_a.SetMode(AUTOMATIC);
     pid_pitch_a.SetSampleTime(10);
@@ -45,22 +45,22 @@ void setup()
     pid_roll_b.SetMode (AUTOMATIC);
     pid_roll_b.SetSampleTime(10);
   
-  Serial.println("Initializing barometer...");
+  //Serial.println("Initializing barometer...");
     barometer.initialize();
     bmpGetPressure();
     initial_pressure = pressure;
 
-  Serial.println("Enabling controls...");
+  //Serial.println("Enabling controls...");
     attachInterrupt(0, readrc0, CHANGE);
     attachInterrupt(1, readrc1, CHANGE);
     attachInterrupt(5, readrc2, CHANGE);
     attachInterrupt(4, readrc3, CHANGE);
 
-  Serial.println("Starting Engines...");
+  //Serial.println("Starting Engines...");
     PORTB=0;    // Clear any motor outputs
     TCCR1A = 0; // Set up high resolution timer
     TCCR1B = 2; // Set up high resolution timer
 
-  Serial.println("Done.");
+  //Serial.println("Done.");
 }
 

@@ -50,9 +50,10 @@ void loop()
   
   // Process data
   process_rc_data();
-  pid_pitch_a.Compute(); pid_roll_a.Compute();
-  pid_pitch_b.Compute(); pid_roll_b.Compute();
-  
+  if (smoothed_control_z > 100) {
+    pid_pitch_a.Compute(); pid_roll_a.Compute();
+    pid_pitch_b.Compute(); pid_roll_b.Compute();
+  }
   // Push data to motors
   set_velocities();
 
