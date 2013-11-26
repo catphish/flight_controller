@@ -48,6 +48,7 @@ void loop()
   // Fetch data
   mpuGetXY();
   //bmpGetPressure();
+  battery_voltage = analogRead(8) * 5.0 / 1023;
   
   // Process data
   process_rc_data();
