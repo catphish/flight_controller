@@ -5,10 +5,10 @@
 
 void set_velocities() {
   float ratio = smoothed_control_z / 700;
-  int fl=1100 + (500 + roll_output + pitch_output) * ratio - gyro_z;
-  int fr=1100 + (500 - roll_output + pitch_output) * ratio + gyro_z;
-  int rl=1100 + (500 + roll_output - pitch_output) * ratio + gyro_z;
-  int rr=1100 + (500 - roll_output - pitch_output) * ratio - gyro_z;
+  int fl=1100 + (500 + roll_output + pitch_output) * ratio;
+  int fr=1100 + (500 - roll_output + pitch_output) * ratio;
+  int rl=1100 + (500 + roll_output - pitch_output) * ratio;
+  int rr=1100 + (500 - roll_output - pitch_output) * ratio;
   
   PORTB=16;
   TCNT1=0;

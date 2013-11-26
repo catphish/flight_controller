@@ -37,14 +37,14 @@ void mpuGetXY() {
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
       // Get pitch and roll from DMP
-      roll_input  = (ypr[2] + GYRO_X_OFFSET) * ACCEL_SENSITIVITY;
-      pitch_input = (ypr[1] + GYRO_Y_OFFSET) * ACCEL_SENSITIVITY;
+      roll_input  = (ypr[2] + MPU_X_OFFSET) * MPU_SENSITIVITY;
+      pitch_input = (ypr[1] + MPU_Y_OFFSET) * MPU_SENSITIVITY;
       // Get gyro data from MPU
       int16_t ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       gyro_x = (gx) * GYRO_SENSITIVITY;
       gyro_y = (gy) * GYRO_SENSITIVITY * -1;
-      gyro_z = (gz) * GYRO_SENSITIVITY ;
+      gyro_z = (gz) * Z_GYRO_SENSITIVITY ;
     }
   }
 }

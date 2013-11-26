@@ -16,10 +16,11 @@
 #define X_CONTROL_SENSITIVITY 0.00
 #define Y_CONTROL_SENSITIVITY 0.00
 #define R_CONTROL_SENSITIVITY 0.00
-#define GYRO_X_OFFSET  -0.002
-#define GYRO_Y_OFFSET  -0.001
-#define ACCEL_SENSITIVITY 100
+#define MPU_X_OFFSET  -0.002
+#define MPU_Y_OFFSET  -0.001
+#define MPU_SENSITIVITY 100
 #define GYRO_SENSITIVITY 0.025
+#define Z_GYRO_SENSITIVITY 0.025
 
 // Global Variables and Objects
 int control_x=0, control_y=0, control_z=0, control_r=0;  // RC Input
@@ -38,6 +39,7 @@ BMP085 barometer;       // Barometer
 bool dmpReady = false;  // set true if DMP init was successful
 float pressure;         // Current pressure
 float initial_pressure; // Initial pressure
+float battery_voltage;  // Battery voltage
 int n=0;
 
 void loop()
@@ -47,7 +49,7 @@ void loop()
   
   // Fetch data
   mpuGetXY();
-  //bmpGetPressure();
+  bmpGetPressure();
   battery_voltage = analogRead(8) * 5.0 / 1023;
   
   // Process data
@@ -63,6 +65,4 @@ void loop()
   //Serial.println(gyro_z);
   delay(1);
 }
-
-
 
