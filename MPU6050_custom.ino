@@ -42,8 +42,9 @@ void mpuGetXY() {
       // Get gyro data from MPU
       int16_t ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-      gyro_x = gx * GYRO_SENSITIVITY;
-      gyro_y = gy * GYRO_SENSITIVITY * -1;
+      gyro_x = (gx) * GYRO_SENSITIVITY;
+      gyro_y = (gy) * GYRO_SENSITIVITY * -1;
+      gyro_z = (gz) * GYRO_SENSITIVITY ;
     }
   }
 }

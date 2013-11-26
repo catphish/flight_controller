@@ -22,15 +22,14 @@ void setup()
     mpu.initialize();                // Initialize MTP6050
     devStatus = mpu.dmpInitialize(); // Initislize DMP
     if (devStatus == 0) {
-      mpu.setXGyroOffset(88);
-      mpu.setYGyroOffset(-59);
-      mpu.setZGyroOffset(8);
+      //mpu.setXGyroOffset(88);
+      //mpu.setYGyroOffset(-59);
+      //mpu.setZGyroOffset(8);
       mpu.setDMPEnabled(true);
       mpuIntStatus = mpu.getIntStatus();
       dmpReady = true;
       packetSize = mpu.dmpGetFIFOPacketSize();
     }
-
   //Serial.println("Initializing PID loops...");
     pid_pitch_a.SetOutputLimits(-200, 200);
     pid_pitch_a.SetMode(AUTOMATIC);
