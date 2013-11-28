@@ -62,7 +62,6 @@ void loop()
     n = 0;
     set_velocities();
   }
-  //Serial.println(gyro_z);
   delay(1);
 }
 

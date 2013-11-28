@@ -4,11 +4,11 @@
 // Motor control functions
 
 void set_velocities() {
-  float ratio = smoothed_control_z / 700;
-  int fl=1100 + (500 + roll_output + pitch_output) * ratio;
-  int fr=1100 + (500 - roll_output + pitch_output) * ratio;
-  int rl=1100 + (500 + roll_output - pitch_output) * ratio;
-  int rr=1100 + (500 - roll_output - pitch_output) * ratio;
+  float ratio = smoothed_control_z / 730;
+  int fl=1064 + (500 + roll_output + pitch_output) * ratio;
+  int fr=1064 + (500 - roll_output + pitch_output) * ratio;
+  int rl=1064 + (500 + roll_output - pitch_output) * ratio;
+  int rr=1064 + (500 - roll_output - pitch_output) * ratio;
   
   PORTB=16;
   TCNT1=0;
@@ -23,16 +23,5 @@ void set_velocities() {
   TCNT1=0;
   while(TCNT1 < rr * 2);
   PORTB=0;
-  
-  //Serial.print(roll_input);
-  //Serial.print(",");
-  //Serial.print(pitch_input);
-  //Serial.print(gyro_x + gyro_y);
-  //Serial.print(",");
-  //Serial.print(roll_mid + pitch_mid);
-  //Serial.print(",");
-  //Serial.print(roll_output + pitch_output);
-  //Serial.print("\n");
-  //Serial.println(fl);
 }
 
