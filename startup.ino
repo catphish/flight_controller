@@ -30,20 +30,6 @@ void setup()
       dmpReady = true;
       packetSize = mpu.dmpGetFIFOPacketSize();
     }
-  //Serial.println("Initializing PID loops...");
-    pid_pitch_a.SetOutputLimits(-200, 200);
-    pid_pitch_a.SetMode(AUTOMATIC);
-    pid_pitch_a.SetSampleTime(10);
-    pid_roll_a.SetOutputLimits (-200, 200);
-    pid_roll_a.SetMode (AUTOMATIC);
-    pid_roll_a.SetSampleTime(10);
-    pid_pitch_b.SetOutputLimits(-200, 200);
-    pid_pitch_b.SetMode(AUTOMATIC);
-    pid_pitch_b.SetSampleTime(10);
-    pid_roll_b.SetOutputLimits (-200, 200);
-    pid_roll_b.SetMode (AUTOMATIC);
-    pid_roll_b.SetSampleTime(10);
-  
   //Serial.println("Initializing barometer...");
     barometer.initialize();
     bmpGetPressure();
