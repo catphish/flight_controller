@@ -12,17 +12,20 @@
 #define PID_P 200.0
 #define PID_I 0.0
 #define PID_D 0.04
+#define PIDZ_P 1.0
+#define PIDZ_I 0.0
+#define PIDZ_D 0.1
 #define X_CONTROL_SENSITIVITY 0.10
 #define Y_CONTROL_SENSITIVITY 0.10
-#define R_CONTROL_SENSITIVITY 0.00
+#define Z_CONTROL_SENSITIVITY 0.20
 
 // Global Variables and Objects
-int control_x=0, control_y=0, control_z=0, control_r=0;  // RC Input
+int control_x=0, control_y=0, control_t=0, control_z=0;  // RC Input
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
-double smoothed_control_z=0, smoothed_control_r=0;       // Smoothed RC Input
-double pos_x, pos_y;              // IMU input
-double gyro_x, gyro_y;            // Gyro Input
-double output_x, output_y;        // PID Output
+double smoothed_control_t=0, smoothed_control_z=0;       // Smoothed RC Input
+double pos_x, pos_y;                     // IMU input
+double gyro_x, gyro_y, gyro_z;           // Gyro Input
+double output_x, output_y, output_z;     // PID Output
 
 MPU6050 mpu;            // Motion processor
 BMP085 barometer;       // Barometer
@@ -47,8 +50,9 @@ void loop()
   process_rc_data();
   
   // PID
-  output_x = smoothed_control_x - pos_x * PID_P - gyro_x * PID_D;
-  output_y = smoothed_control_y - pos_y * PID_P - gyro_y * PID_D;
+  output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
+  output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
+  output_z = smoothed_control_z         * PIDZ_P - gyro_z * PIDZ_D;
   
   // Push data to motors
   n++;

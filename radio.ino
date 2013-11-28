@@ -24,7 +24,7 @@ void readrc2() {
   if ( PIND & 0x08 ) {
     rc2_micros = micros();
   } else {
-    control_z = micros() - rc2_micros;
+    control_t = micros() - rc2_micros;
   }
 }
 long rc3_micros=0;
@@ -32,13 +32,13 @@ void readrc3() {
   if ( PIND & 0x04 ) {
     rc3_micros = micros();
   } else {
-    control_r = micros() - rc3_micros;
+    control_z = micros() - rc3_micros;
   }
 }
 void process_rc_data() {
   smoothed_control_x = smoothed_control_x * 0.9 + (control_x - 1500) * X_CONTROL_SENSITIVITY * 0.1;
   smoothed_control_y = smoothed_control_y * 0.9 + (control_y - 1520) * Y_CONTROL_SENSITIVITY * 0.1;
-  smoothed_control_z = smoothed_control_z * 0.9 + (control_z - 1150) * 0.1;
-  smoothed_control_r = smoothed_control_r * 0.9 + (control_r - 1500) * R_CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_t = smoothed_control_t * 0.9 + (control_t - 1150) * 0.1;
+  smoothed_control_z = smoothed_control_z * 0.9 + (control_z - 1500) * Z_CONTROL_SENSITIVITY * 0.1;
 }
 

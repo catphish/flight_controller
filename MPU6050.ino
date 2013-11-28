@@ -44,6 +44,7 @@ void mpuGetXY() {
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       gyro_x = (gx);
       gyro_y = (-gy);
+      gyro_z = (-gz);
     }
   }
 }
