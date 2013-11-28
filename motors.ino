@@ -5,10 +5,10 @@
 
 void set_velocities() {
   float ratio = smoothed_control_z / 730;
-  int fl=1064 + (500 + output_x + output_y) * ratio;
-  int fr=1064 + (500 - output_x + output_y) * ratio;
-  int rl=1064 + (500 + output_x - output_y) * ratio;
-  int rr=1064 + (500 - output_x - output_y) * ratio;
+  int fl=1064 + (600 + output_x + output_y) * ratio;
+  int fr=1064 + (600 - output_x + output_y) * ratio;
+  int rl=1064 + (600 + output_x - output_y) * ratio;
+  int rr=1064 + (600 - output_x - output_y) * ratio;
   
   PORTB=16;
   TCNT1=0;
@@ -23,5 +23,14 @@ void set_velocities() {
   TCNT1=0;
   while(TCNT1 < rr * 2);
   PORTB=0;
+  
+//  Serial.print(fl);
+//  Serial.print("\t");
+//  Serial.print(fr);
+//  Serial.print("\t");
+//  Serial.print(rl);
+//  Serial.print("\t");
+//  Serial.print(rr);
+//  Serial.print("\n");
 }
 

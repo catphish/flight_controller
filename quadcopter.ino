@@ -9,9 +9,9 @@
 #include "Wire.h"
 
 // Settings
-#define PID_P 100.0
+#define PID_P 200.0
 #define PID_I 0.0
-#define PID_D 0.025
+#define PID_D 0.04
 #define X_CONTROL_SENSITIVITY 0.10
 #define Y_CONTROL_SENSITIVITY 0.10
 #define R_CONTROL_SENSITIVITY 0.00
@@ -31,6 +31,7 @@ float pressure;         // Current pressure
 float initial_pressure; // Initial pressure
 float battery_voltage;  // Battery voltage
 int n=0;
+long t;
 
 void loop()
 {
@@ -55,6 +56,5 @@ void loop()
     n = 0;
     set_velocities();
   }
-  delay(1);
 }
 
