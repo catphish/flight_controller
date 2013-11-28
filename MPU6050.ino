@@ -43,7 +43,7 @@ void mpuGetXY() {
       int16_t ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       gyro_x = (gx);
-      gyro_y = (-gy);
+      gyro_y = (gy);
       gyro_z = (-gz);
     }
   }

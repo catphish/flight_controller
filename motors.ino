@@ -5,10 +5,10 @@
 
 void set_velocities() {
   float ratio = smoothed_control_t / 730;
-  int fl=1064 + (600 + output_x + output_y - output_z) * ratio;
-  int fr=1064 + (600 - output_x + output_y + output_z) * ratio;
-  int rl=1064 + (600 + output_x - output_y + output_z) * ratio;
-  int rr=1064 + (600 - output_x - output_y - output_z) * ratio;
+  int fl=1064 + (600 + output_x - output_y - output_z) * ratio;
+  int fr=1064 + (600 - output_x - output_y + output_z) * ratio;
+  int rl=1064 + (600 + output_x + output_y + output_z) * ratio;
+  int rr=1064 + (600 - output_x + output_y - output_z) * ratio;
   
   PORTB=16;
   TCNT1=0;

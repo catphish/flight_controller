@@ -12,12 +12,12 @@
 #define PID_P 200.0
 #define PID_I 0.0
 #define PID_D 0.04
-#define PIDZ_P 1.0
+#define PIDZ_P 3.0
 #define PIDZ_I 0.0
-#define PIDZ_D 0.1
+#define PIDZ_D 0.2
 #define X_CONTROL_SENSITIVITY 0.10
 #define Y_CONTROL_SENSITIVITY 0.10
-#define Z_CONTROL_SENSITIVITY 0.20
+#define Z_CONTROL_SENSITIVITY 0.2
 
 // Global Variables and Objects
 int control_x=0, control_y=0, control_t=0, control_z=0;  // RC Input
@@ -45,7 +45,6 @@ void loop()
   mpuGetXY();
   bmpGetPressure();
   battery_voltage = analogRead(8) * 5.0 / 1023;
-  
   // Process data
   process_rc_data();
   
