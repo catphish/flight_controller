@@ -24,7 +24,7 @@ void set_velocities() {
   while(TCNT1 < rr * 2);
   PORTB=0;
   
-//  Serial.print(output_z);
+//  Serial.print(fl);
 //  Serial.print("\t");
 //  Serial.print(fr);
 //  Serial.print("\t");

@@ -38,7 +38,7 @@ void mpuGetXY() {
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
       // Get pitch and roll from DMP
       pos_x = (ypr[2]);
-      pos_y = (ypr[1]);
+      pos_y = (-ypr[1]);
       // Get gyro data from MPU
       int16_t ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);

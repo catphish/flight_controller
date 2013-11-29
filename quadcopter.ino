@@ -15,8 +15,8 @@
 #define PIDZ_P 3.0
 #define PIDZ_I 0.0
 #define PIDZ_D 0.2
-#define X_CONTROL_SENSITIVITY 0.02
-#define Y_CONTROL_SENSITIVITY 0.02
+#define X_CONTROL_SENSITIVITY 0.1
+#define Y_CONTROL_SENSITIVITY 0.1
 #define Z_CONTROL_SENSITIVITY 0.2
 
 // Global Variables and Objects
