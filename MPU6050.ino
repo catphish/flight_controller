@@ -33,10 +33,10 @@ void mpuGetXY() {
     while (fifoCount >= packetSize) {
       mpu.getFIFOBytes(fifoBuffer, packetSize);
       fifoCount -= packetSize;
+      // Get pitch and roll from DMP
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      // Get pitch and roll from DMP
       pos_x = (ypr[2]);
       pos_y = (-ypr[1]);
       // Get gyro data from MPU
@@ -45,6 +45,12 @@ void mpuGetXY() {
       gyro_x = (gx);
       gyro_y = (gy);
       gyro_z = (-gz);
+      
+      // Calculate acceleration in world
+      //mpu.dmpGetAccel(&aa, fifoBuffer);
+      //mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+      //mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+      //Serial.println(aaWorld.z); // Hopfully this can be used to hold height
     }
   }
 }
