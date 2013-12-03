@@ -2,13 +2,18 @@
 // Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
 //
 // Motor control functions
+float ratio;
 
 void set_velocities() {
-  float ratio = smoothed_control_t / 730;
-  int fl=1064 + (600 + output_x - output_y - output_z) * ratio;
-  int fr=1064 + (600 - output_x - output_y + output_z) * ratio;
-  int rl=1064 + (600 + output_x + output_y + output_z) * ratio;
-  int rr=1064 + (600 - output_x + output_y - output_z) * ratio;
+  if(armed) {
+    ratio = smoothed_control_t / 730;
+  } else {
+    ratio = 0;
+  }
+  int fl=1064 + 100 * armed + (500 + output_x - output_y - output_z) * ratio;
+  int fr=1064 + 100 * armed + (500 - output_x - output_y + output_z) * ratio;
+  int rl=1064 + 100 * armed + (500 + output_x + output_y + output_z) * ratio;
+  int rr=1064 + 100 * armed + (500 - output_x + output_y - output_z) * ratio;
   
   PORTB=16;
   TCNT1=0;
@@ -23,14 +28,5 @@ void set_velocities() {
   TCNT1=0;
   while(TCNT1 < rr * 2);
   PORTB=0;
-  
-//  Serial.print(fl);
-//  Serial.print("\t");
-//  Serial.print(fr);
-//  Serial.print("\t");
-//  Serial.print(rl);
-//  Serial.print("\t");
-//  Serial.print(rr);
-//  Serial.print("\n");
 }
 
