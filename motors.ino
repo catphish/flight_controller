@@ -15,6 +15,8 @@ void set_velocities() {
   int rl=1064 + 100 * armed + (500 + output_x + output_y + output_z) * ratio;
   int rr=1064 + 100 * armed + (500 - output_x + output_y - output_z) * ratio;
   
+  // TODO: Update all 4 ESCs at the same time
+  
   PORTB=16;
   TCNT1=0;
   while(TCNT1 < fl * 2);

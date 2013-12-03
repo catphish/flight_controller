@@ -23,7 +23,7 @@ void bmpGetPressure() {
       } else {
         pressure = pressure * 0.9 + barometer.getPressure() * 0.1;
       }
-      if (initial_pressure == 0.0 && micros() > 3000000) {
+      if (initial_pressure == 0.0) {
         initial_pressure = pressure;
       }
       barometer.setControl(BMP085_MODE_TEMPERATURE);

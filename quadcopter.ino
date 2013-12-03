@@ -31,8 +31,6 @@ bool dmpReady = false;  // set true if DMP init was successful
 float pressure;         // Current pressure
 float initial_pressure; // Initial pressure
 float battery_voltage;  // Battery voltage
-int n=0;
-long t;
 
 void loop()
 {
@@ -43,10 +41,9 @@ void loop()
   mpuGetXY();
   bmpGetPressure();
   battery_voltage = analogRead(8) * 5.0 / 1023;
+  
   // Process data
   process_rc_data();
-  
-  // PID
   output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
