@@ -45,12 +45,6 @@ void mpuGetXY() {
       gyro_x = (gx);
       gyro_y = (gy);
       gyro_z = (-gz);
-      
-      // Calculate acceleration in world
-      //mpu.dmpGetAccel(&aa, fifoBuffer);
-      //mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-      //mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-      //Serial.println(aaWorld.z); // Hopfully this can be used to hold height
     }
   }
 }
