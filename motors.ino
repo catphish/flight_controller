@@ -10,10 +10,10 @@ void set_velocities() {
   } else {
     ratio = 0;
   }
-  int fl=1064 + 100 * armed + (500 + output_x - output_y - output_z) * ratio;
-  int fr=1064 + 100 * armed + (500 - output_x - output_y + output_z) * ratio;
-  int rl=1064 + 100 * armed + (500 + output_x + output_y + output_z) * ratio;
-  int rr=1064 + 100 * armed + (500 - output_x + output_y - output_z) * ratio;
+  int fl=1064 + 150 * armed + (400 + output_x - output_y - output_z) * ratio;
+  int fr=1064 + 150 * armed + (400 - output_x - output_y + output_z) * ratio;
+  int rl=1064 + 150 * armed + (400 + output_x + output_y + output_z) * ratio;
+  int rr=1064 + 150 * armed + (400 - output_x + output_y - output_z) * ratio;
   
   // TODO: Update all 4 ESCs at the same time
   
