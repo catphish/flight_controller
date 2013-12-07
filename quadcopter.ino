@@ -9,12 +9,12 @@
 #include "Wire.h"
 
 // Settings
-#define PID_P 200.0  // This is the yaw/roll feedback amount
-#define PID_D 0.04   // This isn't really derived, it's a raw gyro, but the affect is the same
+#define PID_P 300.0  // This is the yaw/roll feedback amount
+#define PID_D 0.05   // This isn't really derived, it's a raw gyro, but the affect is the same
 #define PIDZ_P 0.2   // The yaw feedback sensitivity
-#define X_CONTROL_SENSITIVITY 0.2  // X control sensitivity
-#define Y_CONTROL_SENSITIVITY 0.2  // Y control sensitivity
-#define Z_CONTROL_SENSITIVITY 0.6  // Z control sensitivity
+#define X_CONTROL_SENSITIVITY 0.3  // X control sensitivity
+#define Y_CONTROL_SENSITIVITY 0.3  // Y control sensitivity
+#define Z_CONTROL_SENSITIVITY 1.0  // Z control sensitivity
 
 // Global Variables and Objects
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
