@@ -18,6 +18,8 @@ unsigned long channel_5_prev;
 long channel_6;
 unsigned long channel_6_prev;
 
+double previous_altitude_hold_control;
+
 SIGNAL(PCINT2_vect) {
   x = PINK^previous_pink;
   if(x & 0x01) {
@@ -55,21 +57,31 @@ SIGNAL(PCINT2_vect) {
       channel_5_prev = micros();
     }
   }
-  //if(x & 0x20) {
-  //  if(previous_pink & 0x20) {
-  //    channel_6 = micros() - channel_6_prev;
-  //  } else {
-  //    channel_6_prev = micros();
-  //  }
-  //}
+  if(x & 0x20) {
+    if(previous_pink & 0x20) {
+      channel_6 = micros() - channel_6_prev;
+    } else {
+      channel_6_prev = micros();
+    }
+  }
   previous_pink=PINK;
 }
 
 void process_rc_data() {
   smoothed_control_x = smoothed_control_x * 0.9 + (channel_1 - 1500) * X_CONTROL_SENSITIVITY * 0.1;
-  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1520) * Y_CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1500) * Y_CONTROL_SENSITIVITY * 0.1;
   smoothed_control_t = smoothed_control_t * 0.9 + (channel_3 - 1150) * 0.1;
   smoothed_control_z = smoothed_control_z * 0.9 + (channel_4 - 1500) * Z_CONTROL_SENSITIVITY * 0.1;
+  
   armed = channel_5 > 1500;
+  altitude_hold_control = altitude_hold_control * 0.9 + (channel_6 - 1000) * 0.1;
+  if (altitude_hold_control < 0) altitude_hold_control = 0;
+  if (altitude_hold_control > 1000) altitude_hold_control = 1000;
+  if (altitude_hold_control >=1 and previous_altitude_hold_control < 1)
+    initial_pressure = pressure;
+  previous_altitude_hold_control = altitude_hold_control;
+  
+  // Don't engage altitude control unless it's been zero'd
+  if (initial_pressure < 1) altitude_hold_control = 0;
 }
 

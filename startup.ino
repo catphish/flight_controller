@@ -17,7 +17,8 @@ void setup()
     pinMode(11, OUTPUT);
     pinMode(12, OUTPUT);
     pinMode(13, OUTPUT);
-
+    initial_pressure = 0;
+    
   //Serial.println("Initializing Gyros and DMP...");
     Wire.begin();
     TWBR = 24;                       // 400kHz I2C clock
@@ -47,4 +48,5 @@ void setup()
 
   //Serial.println("Done.");
 }
+
 
