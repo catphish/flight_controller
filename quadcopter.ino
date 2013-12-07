@@ -49,7 +49,6 @@ void loop()
   output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
-  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.01;
   
   // Push data to motors
   set_velocities();
