@@ -73,5 +73,15 @@ void process_rc_data() {
   smoothed_control_t = smoothed_control_t * 0.9 + (channel_3 - 1150) * 0.1;
   smoothed_control_z = smoothed_control_z * 0.9 + (channel_4 - 1500) * Z_CONTROL_SENSITIVITY * 0.1;
   armed = channel_5 > 1500;
+  
+  altitude_hold_control = altitude_hold_control * 0.9 + (channel_6 - 1000) * 0.1;
+  if (altitude_hold_control < 0) altitude_hold_control = 0;
+  if (altitude_hold_control > 1000) altitude_hold_control = 1000;
+  if (altitude_hold_control >=1 and previous_altitude_hold_control < 1)
+    initial_pressure = pressure;
+  previous_altitude_hold_control = altitude_hold_control;
+  
+  // Don't engage altitude control unless it's been zero'd
+  if (initial_pressure < 1) altitude_hold_control = 0;
 }
 
