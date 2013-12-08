@@ -3,7 +3,6 @@
 //
 // Custom routines relating to the BPM085 to get the current pressure when available
 
-float temperature=0;
 long lastMicros=0;
 bool tp;
 
@@ -21,7 +20,7 @@ void bmpGetPressure() {
       if (pressure == 0.0) {
         pressure = barometer.getPressure();
       } else {
-        pressure = pressure * 0.95 + barometer.getPressure() * 0.05;
+        pressure = pressure * 0.9 + barometer.getPressure() * 0.1;
       }
       barometer.setControl(BMP085_MODE_TEMPERATURE);
       tp = false;
