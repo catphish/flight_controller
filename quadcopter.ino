@@ -4,6 +4,7 @@
 // Important definitions and main loop live here
 
 #include "I2Cdev.h"
+#include "HMC5883L.h"
 #include "BMP085.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "Wire.h"
@@ -20,8 +21,6 @@
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
 double smoothed_control_t=0, smoothed_control_z=0;       // Smoothed RC Input
 int armed=0;
-double altitude_hold_control;
-double altitude_hold_correction;
 
 double pos_x, pos_y;                     // IMU input
 double gyro_x, gyro_y, gyro_z;           // Gyro Input
@@ -29,10 +28,12 @@ double output_x, output_y, output_z;     // PID Output
 
 MPU6050 mpu;             // Motion processor
 BMP085 barometer;        // Barometer
+HMC5883L mag;            // Compass
 bool dmpReady = false;   // set true if DMP init was successful
 double pressure;         // Current pressure
 double initial_pressure; // Initial pressure
 float battery_voltage;   // Battery voltage
+float heading;           // Rotational direction
 
 void loop()
 {
@@ -42,6 +43,7 @@ void loop()
   // Fetch data
   mpuGetXY();
   bmpGetPressure();
+  hmlGetHeading();
   battery_voltage = analogRead(8) * 5.0 / 1023;
   
   // Process data

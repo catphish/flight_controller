@@ -34,7 +34,8 @@ void setup()
     barometer.initialize();
     bmpGetPressure();
     initial_pressure = pressure;
-
+  //Serial.println("Initializing compass...");
+    mag.initialize();
   //Serial.println("Enabling controls...");
     cli();		// switch interrupts off while messing with their settings  
     PCMSK2 |= (1<<PCINT16)|(1<<PCINT17)|(1<<PCINT18)|(1<<PCINT19)|(1<<PCINT20)|(1<<PCINT21);
