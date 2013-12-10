@@ -5,6 +5,8 @@
 
 long lastMicros=0;
 bool tp;
+double ground_pressure=0; // Initial pressure
+double p=0;
 
 void bmpGetPressure() {
   if(lastMicros == 0) {
@@ -17,11 +19,12 @@ void bmpGetPressure() {
       barometer.setControl(BMP085_MODE_PRESSURE_3);
       tp = true;
     } else {
-      if (pressure == 0.0) {
-        pressure = barometer.getPressure();
-      } else {
-        pressure = pressure * 0.9 + barometer.getPressure() * 0.1;
+      p = barometer.getPressure();
+      if (ground_pressure == 0.0) {
+        ground_pressure = p;
       }
+      pressure = pressure * 0.95 + (ground_pressure - p) * 0.05;
+      
       barometer.setControl(BMP085_MODE_TEMPERATURE);
       tp = false;
     }

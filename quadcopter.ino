@@ -15,7 +15,7 @@
 #define PIDZ_P 0.2   // The yaw feedback sensitivity
 #define X_CONTROL_SENSITIVITY 0.25  // X control sensitivity
 #define Y_CONTROL_SENSITIVITY 0.25  // Y control sensitivity
-#define Z_CONTROL_SENSITIVITY 1.0  // Z control sensitivity
+#define Z_CONTROL_SENSITIVITY 1.0   // Z control sensitivity
 
 // Global Variables and Objects
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
@@ -25,15 +25,17 @@ int armed=0;
 double pos_x, pos_y;                     // IMU input
 double gyro_x, gyro_y, gyro_z;           // Gyro Input
 double output_x, output_y, output_z;     // PID Output
+double accel_z;                          // Z Accelerometer
+double velocity_z;                       // Integrated Z accelerometer
 
-MPU6050 mpu;             // Motion processor
-BMP085 barometer;        // Barometer
-HMC5883L mag;            // Compass
-bool dmpReady = false;   // set true if DMP init was successful
-double pressure;         // Current pressure
-double initial_pressure; // Initial pressure
-float battery_voltage;   // Battery voltage
-float heading;           // Rotational direction
+MPU6050 mpu;               // Motion processor
+BMP085 barometer;          // Barometer
+HMC5883L mag;              // Compass
+bool dmpReady = false;     // set true if DMP init was successful
+double set_pressure=0;     // Pressure holdpoint
+double pressure=0;         // Current pressure
+float battery_voltage;     // Battery voltage
+float heading;             // Rotational direction
 double altitude_hold_control;
 double altitude_hold_correction;
 
@@ -53,7 +55,7 @@ void loop()
   output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
-  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.01;
+  altitude_hold_correction = (set_pressure - pressure - velocity_z * 0.05) * altitude_hold_control;
 
   // Push data to motors
   set_velocities();
