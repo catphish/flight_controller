@@ -78,10 +78,10 @@ void process_rc_data() {
   if (altitude_hold_control < 0) altitude_hold_control = 0;
   if (altitude_hold_control > 1000) altitude_hold_control = 1000;
   if (altitude_hold_control >=1 and previous_altitude_hold_control < 1)
-    set_pressure = pressure;
+    initial_pressure = pressure;
   previous_altitude_hold_control = altitude_hold_control;
   
   // Don't engage altitude control unless it's been zero'd
-  if (set_pressure < 1) altitude_hold_control = 0;
+  if (initial_pressure < 1) altitude_hold_control = 0;
 }
 

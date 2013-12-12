@@ -17,6 +17,7 @@ void setup()
     pinMode(11, OUTPUT);
     pinMode(12, OUTPUT);
     pinMode(13, OUTPUT);
+    initial_pressure = 0;
     
   //Serial.println("Initializing Gyros and DMP...");
     Wire.begin();
@@ -31,6 +32,8 @@ void setup()
     }
   //Serial.println("Initializing barometer...");
     barometer.initialize();
+    bmpGetPressure();
+    initial_pressure = pressure;
   //Serial.println("Initializing compass...");
     mag.initialize();
   //Serial.println("Enabling controls...");

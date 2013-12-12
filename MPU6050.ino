@@ -21,7 +21,6 @@ VectorInt16 aaWorld; // [x, y, z] world-frame accel sensor measurements
 VectorFloat gravity; // [x, y, z] gravity vector
 float euler[3]; // [psi, theta, phi] Euler angle container
 float ypr[3]; // [yaw, pitch, roll] yaw/pitch/roll container and gravity vector
-boolean active = false;
 
 void mpuGetXY() {
   mpuIntStatus = mpu.getIntStatus();
@@ -46,37 +45,6 @@ void mpuGetXY() {
       gyro_x = (gx);
       gyro_y = (gy);
       gyro_z = (-gz);
-      
-      mpu.dmpGetAccel(&aa, fifoBuffer);
-      mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-      mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-      
-      accel_z = 0;
-      if(ypr[2] > 0 and aa.x != 0)
-        accel_z += sq(aa.y/128) * (aa.y/abs(aa.y));
-      if(ypr[2] < 0 and aa.x != 0)
-        accel_z -= sq(aa.y/128) * (aa.y/abs(aa.y));
-        
-      if(ypr[1] > 0 and aa.y != 0)
-        accel_z += sq(aa.x/128) * (aa.x/abs(aa.x));
-      if(ypr[1] < 0 and aa.y != 0)
-        accel_z -= sq(aa.x/128) * (aa.x/abs(aa.x));
-        
-      if(aa.z != 0)
-        accel_z += sq(aa.z/128) * (aa.z/abs(aa.z));
-      
-      if(accel_z != 0) {
-        accel_z = sqrt(abs(accel_z)) * (accel_z/abs(accel_z));
-      }
-      accel_z -= 64;
-      //Serial.println(accel_z);
-      if(active or micros() > 1000000) {
-        active = true;
-        velocity_z += accel_z;
-        if(abs(velocity_z > 1)) {
-          velocity_z -= 1 * (abs(velocity_z) / velocity_z);
-        }
-      }
     }
   }
 }
