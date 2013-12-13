@@ -45,7 +45,8 @@ void loop()
   // Fetch data
   mpuGetXY();
   bmpGetPressure();
-  hmlGetHeading();
+  //hmlGetHeading();   // Not used
+  //sr04GetDistance(); // Not used
   battery_voltage = analogRead(8) * 5.0 / 1023;
   
   // Process data
