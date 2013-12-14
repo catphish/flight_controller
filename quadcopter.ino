@@ -12,7 +12,7 @@
 // Settings
 #define PID_P 150.0  // This is the yaw/roll feedback amount
 #define PID_D 0.03   // This isn't really derived, it's a raw gyro, but the affect is the same
-#define PIDZ_P 0.2   // The yaw feedback sensitivity
+#define PIDZ_P 0.1   // The yaw feedback sensitivity
 #define X_CONTROL_SENSITIVITY 0.25  // X control sensitivity
 #define Y_CONTROL_SENSITIVITY 0.25  // Y control sensitivity
 #define Z_CONTROL_SENSITIVITY 1.0  // Z control sensitivity
@@ -55,10 +55,10 @@ void loop()
   output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
-  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.04;
-
+  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.02 + sqrt(sq(pos_x) + sq(pos_y)) * 100;
   // Push data to motors
   set_velocities();
+  
   
 }
 

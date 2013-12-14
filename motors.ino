@@ -19,21 +19,20 @@ void set_velocities() {
   int rl=1064 + (150 + output_x + output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
   int rr=1064 + (150 - output_x + output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
   
-  // Output pulses to ESCs
-  // TODO: Update all 4 ESCs at the same time
-  PORTB=16;
+  // Output pulses to ESCs simultaneously
+  PORTB=240;
   TCNT1=0;
-  while(TCNT1 < fl * 2);
-  PORTB=32;
-  TCNT1=0;
-  while(TCNT1 < fr * 2);
-  PORTB=64;
-  TCNT1=0;
-  while(TCNT1 < rl * 2);
-  PORTB=128;
-  TCNT1=0;
-  while(TCNT1 < rr * 2);
-  PORTB=0;
+  while(PORTB & 240) {
+    if(TCNT1 >= fl * 2)
+      PORTB &= 239;
+    if(TCNT1 >= fr * 2)
+      PORTB &= 223;
+    if(TCNT1 >= rl * 2)
+      PORTB &= 191;
+    if(TCNT1 >= rr * 2)
+      PORTB &= 127;
+  }
+  delayMicroseconds(200);
 }
 
 
