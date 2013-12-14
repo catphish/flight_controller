@@ -32,6 +32,7 @@ HMC5883L mag;            // Compass
 bool dmpReady = false;   // set true if DMP init was successful
 double pressure;         // Current pressure
 double initial_pressure; // Initial pressure
+double distance;         // Current distance from ground if ultrasound installed
 float battery_voltage;   // Battery voltage
 float heading;           // Rotational direction
 double altitude_hold_control;
@@ -54,7 +55,7 @@ void loop()
   output_x = smoothed_control_x - pos_x * PID_P  - gyro_x * PID_D;
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
-  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.01;
+  altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.04;
 
   // Push data to motors
   set_velocities();
