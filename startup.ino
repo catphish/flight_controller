@@ -32,8 +32,8 @@ void setup()
     }
   //Serial.println("Initializing barometer...");
     barometer.initialize();
-    bmpGetPressure();
-    initial_pressure = pressure;
+    //barometer.readValues(&p, &t);
+    //initial_pressure = p;
   //Serial.println("Initializing compass...");
     mag.initialize();
   //Serial.println("Enabling controls...");

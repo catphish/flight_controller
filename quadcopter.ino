@@ -5,7 +5,7 @@
 
 #include "I2Cdev.h"
 #include "HMC5883L.h"
-#include "BMP085.h"
+#include "MS561101BA.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "Wire.h"
 
@@ -16,7 +16,7 @@
 #define X_CONTROL_SENSITIVITY 0.25  // X control sensitivity
 #define Y_CONTROL_SENSITIVITY 0.25  // Y control sensitivity
 #define Z_CONTROL_SENSITIVITY 1.0  // Z control sensitivity
-
+  
 // Global Variables and Objects
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
 double smoothed_control_t=0, smoothed_control_z=0;       // Smoothed RC Input
@@ -27,7 +27,7 @@ double gyro_x, gyro_y, gyro_z;           // Gyro Input
 double output_x, output_y, output_z;     // PID Output
 
 MPU6050 mpu;             // Motion processor
-BMP085 barometer;        // Barometer
+MS561101BA barometer(B1110111); // Barometer
 HMC5883L mag;            // Compass
 bool dmpReady = false;   // set true if DMP init was successful
 double pressure;         // Current pressure
@@ -45,7 +45,7 @@ void loop()
   
   // Fetch data
   mpuGetXY();
-  bmpGetPressure();
+  msGetPressure();
   //hmlGetHeading();   // Not used
   //sr04GetDistance(); // Not used
   battery_voltage = analogRead(8) * 5.0 / 1023;
@@ -56,6 +56,7 @@ void loop()
   output_y = smoothed_control_y - pos_y * PID_P  - gyro_y * PID_D;
   output_z = smoothed_control_z - gyro_z * PIDZ_P;
   altitude_hold_correction = (pressure - initial_pressure) * altitude_hold_control * 0.02 + sqrt(sq(pos_x) + sq(pos_y)) * 100;
+  
   // Push data to motors
   set_velocities();
   

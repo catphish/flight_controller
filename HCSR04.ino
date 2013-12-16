@@ -7,6 +7,5 @@ void sr04GetDistance() {
   d = pulseIn(3, HIGH, 1000);
   if(d > 0 and d < 11640) {
     distance = d / 58.2;
-    //Serial.println(distance);
   }
 }
