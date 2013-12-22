@@ -1,13 +1,8 @@
-update=Sun 22 Dec 2013 01:48:28 GMT
+update=Sun 22 Dec 2013 14:42:14 GMT
 version=1
-last_client=eeschema
+last_client=cvpcb
 [general]
 version=1
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
 [pcbnew]
 version=1
 LastNetListRead=flight-controller.net
@@ -28,7 +23,6 @@ DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
 ModuleOutlineThickness="    0.150000"
 [pcbnew/libraries]
-LibDir=
 LibName1=sockets
 LibName2=connect
 LibName3=discret
@@ -46,6 +40,8 @@ LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
 LibName17=fv_kicad_lib
+LibName18=MADW__HC49U-S
+LibDir=
 [eeschema]
 version=1
 LibDir=
@@ -85,3 +81,8 @@ LibName27=opto
 LibName28=atmel
 LibName29=contrib
 LibName30=valves
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms

@@ -1,38 +1,94 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 16 Dec 2013 21:31:36 GMT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 22 Dec 2013 14:43:17 GMT
 
 BeginCmp
 TimeStamp = /52ADD0C5;
 Reference = C1;
-ValeurCmp = C;
-IdModule  = SM0402;
+ValeurCmp = 22pF;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADD0D4;
 Reference = C2;
-ValeurCmp = C;
-IdModule  = SM0402;
+ValeurCmp = 22pF;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADF725;
 Reference = C3;
-ValeurCmp = C;
-IdModule  = SM0402;
+ValeurCmp = 2200pF;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADF536;
 Reference = C4;
-ValeurCmp = C;
-IdModule  = SM0402;
+ValeurCmp = 10nF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B7020A;
+Reference = C5;
+ValeurCmp = 100nF;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADF81F;
 Reference = C6;
-ValeurCmp = C;
-IdModule  = SM0402;
+ValeurCmp = 0.1uF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6FE70;
+Reference = C7;
+ValeurCmp = 100nF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6F41F;
+Reference = C8;
+ValeurCmp = 100nF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6EF9F;
+Reference = C9;
+ValeurCmp = 1uF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6F274;
+Reference = C10;
+ValeurCmp = 10uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6F568;
+Reference = C11;
+ValeurCmp = 0.1uF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6EF90;
+Reference = C12;
+ValeurCmp = 100nF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6F968;
+Reference = C13;
+ValeurCmp = 0.01uF;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
@@ -122,22 +178,29 @@ EndCmp
 BeginCmp
 TimeStamp = /52ADD1E5;
 Reference = R1;
-ValeurCmp = R;
-IdModule  = SM0402;
+ValeurCmp = 4.7k;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADD1D6;
 Reference = R2;
-ValeurCmp = R;
-IdModule  = SM0402;
+ValeurCmp = 4.7k;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /52ADF785;
 Reference = R3;
-ValeurCmp = R;
-IdModule  = SM0402;
+ValeurCmp = 4.7k;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52B6FA5A;
+Reference = R4;
+ValeurCmp = 10k;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
@@ -155,17 +218,10 @@ IdModule  = MPU60X0;
 EndCmp
 
 BeginCmp
-TimeStamp = /52AF6C7E;
-Reference = U3;
-ValeurCmp = MS5611-01BA01;
-IdModule  = MS5611-01BA01;
-EndCmp
-
-BeginCmp
 TimeStamp = /52ADD0A1;
 Reference = X1;
-ValeurCmp = CRYSTAL;
-IdModule  = SM0805;
+ValeurCmp = 16MHz;
+IdModule  = MADW__HC49U-S;
 EndCmp
 
 EndListe

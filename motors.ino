@@ -13,10 +13,10 @@ void set_velocities() {
   }
   
   // Calculate motor speeds
-  int fl=1064 + (200 + output_x - output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int fr=1064 + (200 - output_x - output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int rl=1064 + (200 + output_x + output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int rr=1064 + (200 - output_x + output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
+  int fl=1064 + 200 * armed + (400 + output_x - output_y - output_z + altitude_hold_correction) * ratio;
+  int fr=1064 + 200 * armed + (400 - output_x - output_y + output_z + altitude_hold_correction) * ratio;
+  int rl=1064 + 200 * armed + (400 + output_x + output_y + output_z + altitude_hold_correction) * ratio;
+  int rr=1064 + 200 * armed + (400 - output_x + output_y - output_z + altitude_hold_correction) * ratio;
   
   // Output pulses to ESCs simultaneously
   PORTB=240;
