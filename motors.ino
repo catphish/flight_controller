@@ -13,11 +13,10 @@ void set_velocities() {
   }
   
   // Calculate motor speeds
-  // TODO: Compensate x/y with additional throttle to revent loss of height when maneuvering
-  int fl=1064 + (150 + output_x - output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int fr=1064 + (150 - output_x - output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int rl=1064 + (150 + output_x + output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
-  int rr=1064 + (150 - output_x + output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
+  int fl=1064 + (200 + output_x - output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
+  int fr=1064 + (200 - output_x - output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
+  int rl=1064 + (200 + output_x + output_y + output_z + altitude_hold_correction) * armed + 400 * ratio;
+  int rr=1064 + (200 - output_x + output_y - output_z + altitude_hold_correction) * armed + 400 * ratio;
   
   // Output pulses to ESCs simultaneously
   PORTB=240;
@@ -32,6 +31,7 @@ void set_velocities() {
     if(TCNT1 >= rr * 2)
       PORTB &= 127;
   }
+  // Pause to ensure there is always a gap between pulses
   delayMicroseconds(200);
 }
 

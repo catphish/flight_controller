@@ -27,7 +27,7 @@ void mpuGetXY() {
   fifoCount = mpu.getFIFOCount();
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
     mpu.resetFIFO();
-    Serial.println(F("FIFO overflow!"));
+    //Serial.println(F("FIFO overflow!"));
   }
   else if (mpuIntStatus & 0x02) {
     while (fifoCount >= packetSize) {
