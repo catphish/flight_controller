@@ -40,7 +40,7 @@ void mpuGetXY() {
       pos_x = (ypr[2]);
       pos_y = (-ypr[1]);
       // Get gyro data from MPU
-      int16_t ax, ay, az, gx, gy, gz;
+      int ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       gyro_x = (gx);
       gyro_y = (gy);

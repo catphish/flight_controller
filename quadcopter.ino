@@ -9,13 +9,13 @@
 
 // Settings
 #define POSITION_FEEDBACK 300.0     // This is the pitch/roll feedback amount
-#define GYRO_FEEDBACK  0.06          // Rotational velovity correction
+#define GYRO_FEEDBACK  0.06         // Rotational velovity correction
 #define YAW_FEEDBACK 0.3            // The yaw correction
 #define X_CONTROL_SENSITIVITY 0.6   // Roll control sensitivity
 #define Y_CONTROL_SENSITIVITY 0.6   // Pitch control sensitivity
 #define Z_CONTROL_SENSITIVITY 2.0   // Yaw control sensitivity
 #define ALTITUDE_HOLD_AMOUNT 150    // How much throttle should we add to compensate for angle
-#define INTEGRATION_AMOUNT 0.001
+#define INTEGRATION_AMOUNT 0.002
 
 // Global Variables and Objects
 double smoothed_control_x=0, smoothed_control_y=0;       // Smoothed RC Input
@@ -49,19 +49,21 @@ void loop()
   output_y = y + integrated_y;
   integrated_x += x * INTEGRATION_AMOUNT;
   integrated_y += y * INTEGRATION_AMOUNT;
-  if(smoothed_control_t < 100) integrated_x = 0;
-  if(smoothed_control_t < 100) integrated_y = 0;
+  if(smoothed_control_t < 100) {
+    integrated_x = 0;
+    integrated_y = 0;
+  }
   
-  output_z = smoothed_control_z - gyro_z * YAW_FEEDBACK;
+  if (abs(smoothed_control_z) < 20) {
+    output_z = 0 - gyro_z * YAW_FEEDBACK;
+  } else {
+    output_z = smoothed_control_z;
+  }
   
   altitude_hold_correction = sqrt(sq(pos_x) + sq(pos_y)) * ALTITUDE_HOLD_AMOUNT;
   
   // Push data to motors
   set_velocities();
   
-//  Serial.print(integrated_x);
-//  Serial.print(",");
-//  Serial.print(integrated_y);
-//  Serial.print("\n");
 }
 

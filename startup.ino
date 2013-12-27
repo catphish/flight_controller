@@ -21,8 +21,8 @@ void setup()
   // Initializing Gyros and DMP
   Wire.begin();
   TWBR = 24;                       // 400kHz I2C clock
-  mpu.initialize();                // Initialize MTP6050
   devStatus = mpu.dmpInitialize(); // Initislize DMP
+  
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
     mpuIntStatus = mpu.getIntStatus();
