@@ -69,11 +69,16 @@ SIGNAL(PCINT2_vect) {
 }
 
 void process_rc_data() {
-  smoothed_control_x = smoothed_control_x * 0.9 + (channel_1 - 1500) * X_CONTROL_SENSITIVITY * 0.1;
-  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1500) * Y_CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_x = smoothed_control_x * 0.9 + (channel_1 - 1500) * CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1500) * CONTROL_SENSITIVITY * 0.1;
   smoothed_control_t = smoothed_control_t * 0.9 + (channel_3 - 1150) * 0.1;
-  smoothed_control_z = smoothed_control_z * 0.9 + (channel_4 - 1500) * Z_CONTROL_SENSITIVITY * 0.1;
+  if(abs(channel_4 - 1500) > 30) {
+    smoothed_control_z += (channel_4 - 1500) * CONTROL_SENSITIVITY_Z * 0.001;
+    if(smoothed_control_z > 360.0) smoothed_control_z -= 360.0;
+    if(smoothed_control_z < 0.0)   smoothed_control_z += 360.0;
+  }
   armed = channel_5 > 1500;
-  
+  altitude_hold_control = altitude_hold_control * 0.9 + (channel_6 - 1150) * 0.7 * 0.1;
+  if(altitude_hold_control < 0) altitude_hold_control = 0;
 }
 

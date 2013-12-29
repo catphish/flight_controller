@@ -37,8 +37,10 @@ void mpuGetXY() {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      pos_x = (ypr[2]);
-      pos_y = (-ypr[1]);
+      pos_x =  ypr[2];
+      pos_y = -ypr[1];
+      pos_z =  ypr[0] * 180 / 3.14159;
+      if(pos_z < 0.0) pos_z += 360.0;
       // Get gyro data from MPU
       int ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
