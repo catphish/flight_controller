@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 22 Dec 2013 14:43:17 GMT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Fri 27 Dec 2013 16:31:22 GMT
 
 BeginCmp
 TimeStamp = /52ADD0C5;
@@ -88,6 +88,20 @@ BeginCmp
 TimeStamp = /52B6F968;
 Reference = C13;
 ValeurCmp = 0.01uF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52BDAADF;
+Reference = C14;
+ValeurCmp = 100nF;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /52BDAAEE;
+Reference = C15;
+ValeurCmp = 100nF;
 IdModule  = SM0603;
 EndCmp
 
@@ -221,7 +235,7 @@ BeginCmp
 TimeStamp = /52ADD0A1;
 Reference = X1;
 ValeurCmp = 16MHz;
-IdModule  = MADW__HC49U-S;
+IdModule  = CRYSTAL-HC49-US;
 EndCmp
 
 EndListe

@@ -1,4 +1,4 @@
-update=Sun 22 Dec 2013 14:42:14 GMT
+update=Fri 27 Dec 2013 16:07:15 GMT
 version=1
 last_client=cvpcb
 [general]
@@ -41,6 +41,7 @@ LibName15=pga_sockets
 LibName16=valves
 LibName17=fv_kicad_lib
 LibName18=MADW__HC49U-S
+LibName19=/home/charlie/guan
 LibDir=
 [eeschema]
 version=1

@@ -17,7 +17,7 @@ void setup()
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(13, OUTPUT);
-    
+  
   // Initializing Gyros and DMP
   Wire.begin();
   TWBR = 24;                       // 400kHz I2C clock

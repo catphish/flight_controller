@@ -9,8 +9,9 @@
 
 // Settings
 #define POSITION_FEEDBACK 300.0       // This is the pitch/roll feedback amount
-#define POSITION_FEEDBACK_Z 1.5       // This is the yaw feedback amount
+#define POSITION_FEEDBACK_Z 20        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.06           // Rotational velovity correction
+#define GYRO_FEEDBACK_Z  0.1          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.6       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
 #define INTEGRATION_AMOUNT 0.002      // Pitch/roll integration amount
@@ -49,30 +50,35 @@ void loop()
   double x, y, z;
   x = smoothed_control_x - pos_x * POSITION_FEEDBACK - gyro_x * GYRO_FEEDBACK;
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
-  z = smoothed_control_z - pos_z;
-  if (z >  180) z -= 360; // Try to find the most efficient path to correct yaw
-  if (z < -180) z += 360; // Try to find the most efficient path to correct yaw
   
   // Integrate pitch and roll to counter any permanent imbalance
   integrated_x += x * INTEGRATION_AMOUNT;
   integrated_y += y * INTEGRATION_AMOUNT;
   
-  // Reset integrals if throttle is zero
+  // Reset integrals and yaw if throttle is zero
   if(smoothed_control_t < 50) {
     integrated_x = 0;
     integrated_y = 0;
+    smoothed_control_z = pos_z;
   }
+  
+  // Calculate basic yaw correction
+  z = smoothed_control_z - pos_z;
+  if (z >  180) z -= 360; // Try to find the most efficient path to correct yaw
+  if (z < -180) z += 360; // Try to find the most efficient path to correct yaw
   
   // Apply the integrals
   output_x = x + integrated_x;
   output_y = y + integrated_y;
-  output_z = z;
+  
+  // Apply the yaw gyro feedback
+  output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
   
   // Calculate throttle correction based on pitch/roll and control input
-  altitude_hold_correction = (pos_x + pos_y) * altitude_hold_control;
+  // 180 Seems to be a good value for this, but it's adjustable for now
+  altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * altitude_hold_control;
   
   // Push data to motors
   set_velocities();
-  
 }
 
