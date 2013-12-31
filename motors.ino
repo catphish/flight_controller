@@ -18,6 +18,12 @@ void set_velocities() {
   int rl=1064 + (400 + output_x + output_y + output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
   int rr=1064 + (400 - output_x + output_y - output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
   
+  // Limit extremes to avoid confusing ESCs
+  if(fl < 1064) fl = 1064;  if(fl > 2200) fl = 2200;
+  if(fr < 1064) fr = 1064;  if(fr > 2200) fr = 2200;
+  if(rl < 1064) rl = 1064;  if(rl > 2200) rl = 2200;
+  if(rr < 1064) rr = 1064;  if(rr > 2200) rr = 2200;
+  
   // Output pulses to ESCs simultaneously
   PORTB=240;
   TCNT1=0;

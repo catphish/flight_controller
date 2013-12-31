@@ -24,6 +24,7 @@ double smoothed_control_z=0;          // Smoothed RC Input
 
 int armed=0;                          // Motors enabled
 double pos_x, pos_y, pos_z;           // IMU input
+boolean upside_down;
 double gyro_x, gyro_y, gyro_z;        // Gyro Input
 double output_x, output_y, output_z;  // Stabilization Output
 double altitude_hold_correction;      // Altitude hold output
@@ -71,9 +72,18 @@ void loop()
   output_x = x + integrated_x;
   output_y = y + integrated_y;
   
+  // Don't correct yaw difference at extremes of pitch/roll, gimbal lock makes a mess of this
+  z *= (1.570795 - abs(pos_x) - abs(pos_y)) / 1.570795;
+  
+  // Adjusting yaw upside down is inaccurate and really quite pointless
+  if(upside_down) z = 0;
+  
   // Apply the yaw gyro feedback
   output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
   
+  // Limit extremes of yaw correction
+  if(output_z < -300) output_z = -300;  if(output_z >  300) output_z =  300;
+
   // Calculate throttle correction based on pitch/roll and control input
   // 180 Seems to be a good value for this, but it's adjustable for now
   altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * altitude_hold_control;

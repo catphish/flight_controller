@@ -47,6 +47,9 @@ void mpuGetXY() {
       gyro_x = (gx);
       gyro_y = (gy);
       gyro_z = (-gz);
+      
+      mpu.dmpGetEuler(euler, &q);
+      upside_down = (abs(euler[2]) > 1.570795);
     }
   }
 }
