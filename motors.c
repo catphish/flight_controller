@@ -22,17 +22,17 @@ void update_motors(unsigned char armed, int roll, int pitch, int yaw, int thrott
   if(rr < 1064) rr = 1064;  if(rr > 2200) rr = 2200;
   
   // Output pulses to ESCs simultaneously
-  PORTB=240;
+  PORTA=240;
   TCNT1=0;
-  while(PORTB & 240) {
+  while(PORTA & 240) {
     if(TCNT1 >= fl * 2)
-      PORTB &= 239;
+      PORTA &= 239;
     if(TCNT1 >= fr * 2)
-      PORTB &= 223;
+      PORTA &= 223;
     if(TCNT1 >= rl * 2)
-      PORTB &= 191;
+      PORTA &= 191;
     if(TCNT1 >= rr * 2)
-      PORTB &= 127;
+      PORTA &= 127;
   }
   // Pause to ensure there is always a gap between pulses
   _delay_us(200);

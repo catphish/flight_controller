@@ -2,14 +2,26 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-unsigned long int micros_counter=0;
+volatile unsigned long int micros_counter=0;
+
 ISR(TIMER0_OVF_vect)
 {
   micros_counter += 1;
 }
 
 unsigned long int micros() {
-  return((micros_counter * 256 + TCNT0)/2);
+  unsigned long m, mm;
+  cli();
+  m = micros_counter;
+  mm = TCNT0;
+	if ((TIFR0 & _BV(TOV0)) && (mm < 255))
+		m++;
+  sei();
+  
+	m *= 256;
+	m += mm;
+	m /= 2;
+  return m;
 }
 
 unsigned long int millis() {

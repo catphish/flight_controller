@@ -134,12 +134,12 @@ void mpu6050_init() {
   
 }
 
-void mpu6050_get_gyro(int16_t *gx, int16_t *gy, int16_t *gz) {
+void mpu6050_get_gyro(int16_t *gy, int16_t *gp, int16_t *gr) {
   char buffer[6];
   i2c_read_bytes(0x68, 0x43, buffer, 6);
-  *gx = (buffer[0] << 8 ) | (buffer[1] & 0xff);
-  *gy = (buffer[2] << 8 ) | (buffer[3] & 0xff);
-  *gz = (buffer[4] << 8 ) | (buffer[5] & 0xff);
+  *gr = (buffer[0] << 8 ) | (buffer[1] & 0xff);
+  *gp = (buffer[2] << 8 ) | (buffer[3] & 0xff);
+  *gy = -(buffer[4] << 8 ) | (buffer[5] & 0xff);
 }
 
 void mpu6050_get_ypr(float *y, float *p, float *r) {
@@ -173,7 +173,7 @@ void mpu6050_get_ypr(float *y, float *p, float *r) {
     g[2] = q[0] * q[0] - q[1] * q[1] - q[2]*q[2] + q[3]*q[3];
     
     *y = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1);
-    *p = atan(g[0] / sqrt(g[1] * g[1] + g[2] * g[2]));
+    *p = -atan(g[0] / sqrt(g[1] * g[1] + g[2] * g[2]));
     *r = atan(g[1] / sqrt(g[0] * g[0] + g[2] * g[2]));
   }
 }
