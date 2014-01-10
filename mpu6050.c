@@ -134,15 +134,7 @@ void mpu6050_init() {
   
 }
 
-void mpu6050_get_gyro(int16_t *gy, int16_t *gp, int16_t *gr) {
-  char buffer[6];
-  i2c_read_bytes(0x68, 0x43, buffer, 6);
-  *gr = (buffer[0] << 8 ) | (buffer[1] & 0xff);
-  *gp = (buffer[2] << 8 ) | (buffer[3] & 0xff);
-  *gy = -(buffer[4] << 8 ) | (buffer[5] & 0xff);
-}
-
-void mpu6050_get_ypr(float *y, float *p, float *r) {
+void mpu6050_get_data(float *y, float *p, float *r, int16_t *gy, int16_t *gp, int16_t *gr) {
   char buffer[42];
   int int_status, fifo_count;
   
@@ -167,7 +159,7 @@ void mpu6050_get_ypr(float *y, float *p, float *r) {
     q[1] = (float)((buffer[4] << 8)  + buffer[5])   / 16384.0f;
     q[2] = (float)((buffer[8] << 8)  + buffer[9])   / 16384.0f;
     q[3] = (float)((buffer[12] << 8) + buffer[13])  / 16384.0f;
-     
+    
     g[0] = 2 * (q[1] * q[3] - q[0] * q[2]);
     g[1] = 2 * (q[0] * q[1] + q[2] * q[3]);
     g[2] = q[0] * q[0] - q[1] * q[1] - q[2]*q[2] + q[3]*q[3];
@@ -175,5 +167,9 @@ void mpu6050_get_ypr(float *y, float *p, float *r) {
     *y = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1);
     *p = -atan(g[0] / sqrt(g[1] * g[1] + g[2] * g[2]));
     *r = atan(g[1] / sqrt(g[0] * g[0] + g[2] * g[2]));
+    
+    *gr = (buffer[16] << 8) | (buffer[17] & 0xff);
+    *gp = (buffer[20] << 8) | (buffer[21] & 0xff);
+    *gy = -((buffer[24] << 8) | (buffer[25] & 0xff));
   }
 }

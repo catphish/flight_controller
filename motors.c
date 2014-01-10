@@ -1,6 +1,7 @@
 #include "settings.h"
 #include <avr/io.h>
 #include <util/delay.h>
+#include "serial.h"
 
 void update_motors(unsigned char armed, int roll, int pitch, int yaw, int throttle) {
   int fl = 1064;
@@ -22,18 +23,19 @@ void update_motors(unsigned char armed, int roll, int pitch, int yaw, int thrott
   if(rr < 1064) rr = 1064;  if(rr > 2200) rr = 2200;
   
   // Output pulses to ESCs simultaneously
-  PORTA=240;
+  PORTA=15;
   TCNT1=0;
-  while(PORTA & 240) {
+  while(PORTA & 15) {
     if(TCNT1 >= fl * 2)
-      PORTA &= 239;
+      PORTA &= 14;
     if(TCNT1 >= fr * 2)
-      PORTA &= 223;
+      PORTA &= 13;
     if(TCNT1 >= rl * 2)
-      PORTA &= 191;
+      PORTA &= 11;
     if(TCNT1 >= rr * 2)
-      PORTA &= 127;
+      PORTA &= 7;
   }
+  
   // Pause to ensure there is always a gap between pulses
-  _delay_us(200);
+  _delay_us(5000);
 }

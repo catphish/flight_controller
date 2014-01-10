@@ -42,8 +42,7 @@ int main(void)
   // Main loop
   for(;;) {
     // Fetch data
-    mpu6050_get_ypr(&input_y, &input_p, &input_r);
-    mpu6050_get_gyro(&gyro_y, &gyro_p, &gyro_r);
+    mpu6050_get_data(&input_y, &input_p, &input_r, &gyro_y, &gyro_p, &gyro_r);
     
     // Calculations
     armed = channel_5 > 1500;
@@ -61,7 +60,6 @@ int main(void)
     
     // Push data to motors
     update_motors(armed, output_r, output_p, output_y, throttle);
-    
   }
 }
 
