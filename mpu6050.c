@@ -1,3 +1,8 @@
+// Experimental Quadcopter flight controller
+// Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
+//
+// MPU6050 driver utilizing DMP
+
 #include "settings.h"
 #include "i2c.h"
 #include <stdint.h>

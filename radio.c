@@ -1,3 +1,8 @@
+// Experimental Quadcopter flight controller
+// Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
+//
+// Interrupt driven radio receiver code
+
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "timers.h"

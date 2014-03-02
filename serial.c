@@ -1,3 +1,8 @@
+// Experimental Quadcopter flight controller
+// Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
+//
+// A basic set of UART operations
+
 #include "settings.h"
 #include <stdlib.h>
 #include <string.h>

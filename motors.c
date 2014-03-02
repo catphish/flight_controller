@@ -1,3 +1,8 @@
+// Experimental Quadcopter flight controller
+// Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
+//
+// Motor output routines are here
+
 #include "settings.h"
 #include <avr/io.h>
 #include <util/delay.h>

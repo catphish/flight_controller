@@ -1,3 +1,8 @@
+// Experimental Quadcopter flight controller
+// Copyright Charlie Smurthwaite <charlie@atechmedia.com> 2013-11-17
+//
+// AVR I2C routines are here
+
 #include <avr/io.h>
 #include <stdint.h>
 
