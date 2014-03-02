@@ -6,4 +6,4 @@ clean:
 	rm quadcopter.elf quadcopter.hex
 
 install:
-	avrdude -p m2560 -c usbasp -e -U flash:w:quadcopter.hex
+	avrdude -p m2560 -c usbasp -e -U flash:w:quadcopter.hex -F

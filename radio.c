@@ -68,7 +68,7 @@ ISR(PCINT2_vect)
 void pci_init() {
   // Enable pin change interrupt on PORT K
   DDRK = 0x00;    // PORT K is INPUT
-  PCMSK2 |= (1<<PCINT16)|(1<<PCINT17)|(1<<PCINT18)|(1<<PCINT19)|(1<<PCINT20)|(1<<PCINT21);
+  PCMSK2 |= (1<<PCINT0)|(1<<PCINT1)|(1<<PCINT2)|(1<<PCINT3)|(1<<PCINT4)|(1<<PCINT5);
   PCICR  |= (1<<PCIE2);
 }
 

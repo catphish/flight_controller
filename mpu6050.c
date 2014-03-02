@@ -81,8 +81,6 @@ void mpu6050_init() {
   i2c_set_bit(0x68, 0x6B, 6, 0);
   
   // Disable I2C master
-  i2c_write_byte(0x68, 0x25, 0x7F);
-  i2c_set_bit(0x68, 0x6A, 5, 0);
   i2c_write_byte(0x68, 0x25, 0x68);
   i2c_set_bit(0x68, 0x6A, 1, 1);
   
@@ -134,7 +132,7 @@ void mpu6050_init() {
   
 }
 
-void mpu6050_get_data(float *y, float *p, float *r, int16_t *gy, int16_t *gp, int16_t *gr) {
+void mpu6050_get_data(int16_t *y, int16_t *p, int16_t *r, int16_t *gy, int16_t *gp, int16_t *gr) {
   char buffer[42];
   int int_status, fifo_count;
   
@@ -151,25 +149,28 @@ void mpu6050_get_data(float *y, float *p, float *r, int16_t *gy, int16_t *gp, in
     // Allow the buffer to fill if necessary
     while (fifo_count < 42) fifo_count = mpu5060_fifo_count();
     // Empty the buffer, we're ony interested in the last item
-    while (fifo_count >= 42) {
+    while (fifo_count > 81) {
       i2c_read_bytes(0x68, 0x74, buffer, 42);
       fifo_count -= 42;
     }
-    q[0] = (float)((buffer[0] << 8)  + buffer[1])   / 16384.0f;
-    q[1] = (float)((buffer[4] << 8)  + buffer[5])   / 16384.0f;
-    q[2] = (float)((buffer[8] << 8)  + buffer[9])   / 16384.0f;
-    q[3] = (float)((buffer[12] << 8) + buffer[13])  / 16384.0f;
+    q[0] = (float)((buffer[0] << 8)  | (buffer[1] & 0xff))   / 16384.0f;
+    q[1] = (float)((buffer[4] << 8)  | (buffer[5] & 0xff))   / 16384.0f;
+    q[2] = (float)((buffer[8] << 8)  | (buffer[9] & 0xff))   / 16384.0f;
+    q[3] = (float)((buffer[12] << 8) | (buffer[13]& 0xff))  / 16384.0f;
     
     g[0] = 2 * (q[1] * q[3] - q[0] * q[2]);
     g[1] = 2 * (q[0] * q[1] + q[2] * q[3]);
     g[2] = q[0] * q[0] - q[1] * q[1] - q[2]*q[2] + q[3]*q[3];
     
-    *y = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1);
-    *p = -atan(g[0] / sqrt(g[1] * g[1] + g[2] * g[2]));
-    *r = atan(g[1] / sqrt(g[0] * g[0] + g[2] * g[2]));
+    *y = (atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1))*180;
+    *p = (-atan(g[0] / sqrt(g[1] * g[1] + g[2] * g[2])))*180;
+    *r = (atan(g[1] / sqrt(g[0] * g[0] + g[2] * g[2])))*180;
     
-    *gr = (buffer[16] << 8) | (buffer[17] & 0xff);
-    *gp = (buffer[20] << 8) | (buffer[21] & 0xff);
-    *gy = -((buffer[24] << 8) | (buffer[25] & 0xff));
+    char motion6[6];
+    i2c_read_bytes(0x68, 0x43, motion6, 6);
+
+    *gr = (motion6[0] << 8) | (motion6[1] & 0xff);
+    *gp = (motion6[2] << 8) | (motion6[3] & 0xff);
+    *gy = (motion6[4] << 8) | (motion6[5] & 0xff);
   }
 }
