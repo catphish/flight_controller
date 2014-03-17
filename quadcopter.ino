@@ -5,16 +5,18 @@
 
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
+#include "MS561101BA.h"
 #include "Wire.h"
 
 // Settings
-#define POSITION_FEEDBACK 300.0       // This is the pitch/roll feedback amount
+#define POSITION_FEEDBACK 200.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 20        // This is the yaw feedback amount
-#define GYRO_FEEDBACK  0.06           // Rotational velovity correction
+#define GYRO_FEEDBACK  0.09           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.1          // Yaw velovity correction
-#define CONTROL_SENSITIVITY 0.6       // Pitch/roll control sensitivity
+#define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
 #define INTEGRATION_AMOUNT 0.002      // Pitch/roll integration amount
+#define ALTITUDE_HOLD_ADJUSTMENT 310  // Throttle to add based on pitch/roll
 
 // Global Variables and Objects
 double smoothed_control_x=0;          // Smoothed RC Input
@@ -33,8 +35,12 @@ double altitude_hold_control;         // Altitude hold amount selection
 double integrated_x=0;                // Integration of roll
 double integrated_y=0;                // Integration of pitch
 
+double pressure;                      // Current pressure
+double initial_pressure;              // Initial pressure
+
 MPU6050 mpu;                          // Motion processor
 bool dmpReady = false;                // set true if MPU initizlization was successful
+MS561101BA barometer(B1110111);       // Barometer
 
 void loop()
 {
@@ -43,6 +49,7 @@ void loop()
   
   // Fetch data
   mpuGetXY();
+  msGetPressure();
   
   // Process RC data
   process_rc_data();
@@ -85,10 +92,14 @@ void loop()
   if(output_z < -300) output_z = -300;  if(output_z >  300) output_z =  300;
 
   // Calculate throttle correction based on pitch/roll and control input
-  // 180 Seems to be a good value for this, but it's adjustable for now
-  altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * altitude_hold_control;
+  // 310 Seems to be a good value for this
+  altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * ALTITUDE_HOLD_ADJUSTMENT;
+  
+  // Adjust altitude control based on barometer data
+  altitude_hold_correction += ((pressure - initial_pressure) * altitude_hold_control * 0.002);
   
   // Push data to motors
   set_velocities();
+  
 }
 
