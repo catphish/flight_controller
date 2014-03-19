@@ -94,32 +94,27 @@ void loop()
   output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
   
   // Limit extremes of yaw correction
-  if(output_z < -300) output_z = -300;  if(output_z >  300) output_z =  300;
+  if(output_z < -200) output_z = -200;  if(output_z >  200) output_z =  200;
 
   // Calculate throttle correction based on pitch/roll and control input
   // 310 Seems to be a good value for this
   altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * ALTITUDE_HOLD_ADJUSTMENT;
   
-  // Adjust altitude control based on barometer data
-  altitude_hold_correction += ((pressure - initial_pressure) * altitude_hold_control * 0.002);
-  
-  // Push data to motors
-  set_velocities();
-  
-  // Altitude
+  // Calculate altitude and vertical velocity
   baro_alt = (initial_pressure - pressure);
   velocity_estimate += (accel_z * 0.005);
   altitude_estimate += velocity_estimate * 0.01;
   
+  // Correct with barometer
   prev_aii = altitude_estimate;
   altitude_estimate = altitude_estimate * 0.9 + baro_alt * 0.1;
-  
   velocity_estimate += (altitude_estimate - prev_aii) * 0.6;
   
-  //Serial.print(aii);
-  //Serial.print(",");
-  //Serial.print(ai);
-  //Serial.print(",");
-  //Serial.println(baro_alt);
+  // Apply altitude corrections
+  altitude_hold_correction -= velocity_estimate + altitude_estimate;
+  
+  // Push data to motors
+  set_velocities();
+  
 }
 
