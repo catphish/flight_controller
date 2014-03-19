@@ -30,7 +30,7 @@ void setup()
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
   
-  barometer.initialize();
+  msSetup();
   
   // Enabling controls
   cli();		// switch interrupts off while messing with their settings  

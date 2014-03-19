@@ -35,8 +35,13 @@ void mpuGetXY() {
       fifoCount -= packetSize;
       // Get pitch and roll from DMP
       mpu.dmpGetQuaternion(&q, fifoBuffer);
+      mpu.dmpGetAccel(&aa, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+      mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+      mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+      accel_z = aaWorld.z;
+      
       pos_x =  ypr[2];
       pos_y = -ypr[1];
       pos_z =  ypr[0] * 180 / 3.14159;

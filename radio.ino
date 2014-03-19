@@ -19,7 +19,6 @@ long channel_6;
 unsigned long channel_6_prev;
 
 double previous_altitude_hold_control=1000;
-boolean initial_pressure_set=false;
 
 SIGNAL(PCINT2_vect) {
   x = PINK^previous_pink;
@@ -82,13 +81,6 @@ void process_rc_data() {
   altitude_hold_control = altitude_hold_control * 0.9 + (channel_6 - 1000) * 0.1;
   if (altitude_hold_control < 0) altitude_hold_control = 0;
   if (altitude_hold_control > 1000) altitude_hold_control = 1000;
-  if (altitude_hold_control >=1 and previous_altitude_hold_control < 1) {
-    initial_pressure = pressure;
-    initial_pressure_set = true;
-  }
   previous_altitude_hold_control = altitude_hold_control;
-  
-  // Don't engage altitude control unless it's been zero'd
-  if (!initial_pressure_set) altitude_hold_control = 0;
 }
 

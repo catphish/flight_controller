@@ -1,7 +1,13 @@
-float base_pressure=0;
-
 void msGetPressure() {
   float t, p;
   barometer.readValues(&p, &t);
-  pressure = pressure * 0.9 + p * 10;
+  pressure = p * 1000;
 }
+
+void msSetup() {
+  float t, p;
+  barometer.initialize();
+  barometer.readValues(&p, &t);
+  initial_pressure  = p * 1000;
+}
+

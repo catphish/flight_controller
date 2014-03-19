@@ -32,11 +32,16 @@ double output_x, output_y, output_z;  // Stabilization Output
 double altitude_hold_correction;      // Altitude hold output
 double altitude_hold_control;         // Altitude hold amount selection
 
+int accel_z;                          // Measured vertical acceleration
+double velocity_estimate;             // Integrated vertical acceleration (velocity)
+double altitude_estimate;             // Integrated vertical velocity (altitude)
+double prev_aii;                      // Used to calculate velocity correction
+double pressure;                      // Current measured pressure
+double initial_pressure;              // Initial pressure
+double baro_alt;                      // The measured altitude
+
 double integrated_x=0;                // Integration of roll
 double integrated_y=0;                // Integration of pitch
-
-double pressure;                      // Current pressure
-double initial_pressure;              // Initial pressure
 
 MPU6050 mpu;                          // Motion processor
 bool dmpReady = false;                // set true if MPU initizlization was successful
@@ -101,5 +106,20 @@ void loop()
   // Push data to motors
   set_velocities();
   
+  // Altitude
+  baro_alt = (initial_pressure - pressure);
+  velocity_estimate += (accel_z * 0.005);
+  altitude_estimate += velocity_estimate * 0.01;
+  
+  prev_aii = altitude_estimate;
+  altitude_estimate = altitude_estimate * 0.9 + baro_alt * 0.1;
+  
+  velocity_estimate += (altitude_estimate - prev_aii) * 0.6;
+  
+  //Serial.print(aii);
+  //Serial.print(",");
+  //Serial.print(ai);
+  //Serial.print(",");
+  //Serial.println(baro_alt);
 }
 
