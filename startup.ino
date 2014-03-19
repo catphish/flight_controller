@@ -23,6 +23,11 @@ void setup()
   TWBR = 24;                       // 400kHz I2C clock
   devStatus = mpu.dmpInitialize(); // Initislize DMP
   
+  mpu.setXGyroOffset(51);
+  mpu.setYGyroOffset(-55);
+  mpu.setZGyroOffset(4);
+  mpu.setZAccelOffset(887);
+  
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
     mpuIntStatus = mpu.getIntStatus();
