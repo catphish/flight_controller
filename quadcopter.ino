@@ -107,8 +107,8 @@ void loop()
   
   // Correct with barometer
   prev_aii = altitude_estimate;
-  altitude_estimate = altitude_estimate * 0.9 + baro_alt * 0.1;
-  velocity_estimate += (altitude_estimate - prev_aii) * 0.6;
+  altitude_estimate = altitude_estimate * 0.98 + baro_alt * 0.02;
+  velocity_estimate += (altitude_estimate - prev_aii) * 0.8;
   
   // Apply altitude corrections
   altitude_hold_correction -= velocity_estimate + altitude_estimate;
@@ -116,18 +116,12 @@ void loop()
   // Push data to motors
   set_velocities();
   
-  Serial.print(accel_z);
-  Serial.print(",");
-  Serial.print(ay);
-  Serial.print(",");
-  Serial.print(az);
-  Serial.print(",");
-  Serial.print(gx);
-  Serial.print(",");
-  Serial.print(gy);
-  Serial.print(",");
-  Serial.print(gz);
-  Serial.print("\n");
+  //Serial.print(baro_alt);
+  //Serial.print(",");
+  //Serial.print(velocity_estimate);
+  //Serial.print(",");
+  //Serial.print(altitude_estimate);
+  //Serial.print("\n");
   
 }
 
