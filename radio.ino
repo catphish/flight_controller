@@ -5,17 +5,11 @@
 
 unsigned char previous_pink=0;
 unsigned char x=0;
-long channel_1;
 unsigned long channel_1_prev;
-long channel_2;
 unsigned long channel_2_prev;
-long channel_3;
 unsigned long channel_3_prev;
-long channel_4;
 unsigned long channel_4_prev;
-long channel_5;
 unsigned long channel_5_prev;
-long channel_6;
 unsigned long channel_6_prev;
 
 double previous_altitude_hold_control=1000;

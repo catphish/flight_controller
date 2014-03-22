@@ -24,6 +24,9 @@ void set_velocities() {
   if(rl < 1064) rl = 1064;  if(rl > 2200) rl = 2200;
   if(rr < 1064) rr = 1064;  if(rr > 2200) rr = 2200;
   
+  // ESC Calibration
+  //fl = fr = rl = rr = channel_3;
+  
   // Output pulses to ESCs simultaneously
   PORTB=240;
   TCNT1=0;

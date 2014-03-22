@@ -11,12 +11,20 @@
 // Settings
 #define POSITION_FEEDBACK 200.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 20        // This is the yaw feedback amount
-#define GYRO_FEEDBACK  0.09           // Rotational velovity correction
+#define GYRO_FEEDBACK  0.11           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.1          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
 #define INTEGRATION_AMOUNT 0.002      // Pitch/roll integration amount
 #define ALTITUDE_HOLD_ADJUSTMENT 310  // Throttle to add based on pitch/roll
+
+// RC Channels
+long channel_1;
+long channel_2;
+long channel_3;
+long channel_4;
+long channel_5;
+long channel_6;
 
 // Global Variables and Objects
 double smoothed_control_x=0;          // Smoothed RC Input
@@ -31,6 +39,7 @@ double gyro_x, gyro_y, gyro_z;        // Gyro Input
 double output_x, output_y, output_z;  // Stabilization Output
 double altitude_hold_correction;      // Altitude hold output
 double altitude_hold_control;         // Altitude hold amount selection
+int n=0;
 
 int accel_z;                          // Measured vertical acceleration
 double velocity_estimate;             // Integrated vertical acceleration (velocity)
@@ -54,7 +63,11 @@ void loop()
   
   // Fetch data
   mpuGetXY();
-  msGetPressure();
+  n++;
+  if(n == 5) {
+    msGetPressure();
+    n = 0;
+  }
   
   // Process RC data
   process_rc_data();
@@ -111,7 +124,7 @@ void loop()
   velocity_estimate += (altitude_estimate - prev_aii) * 0.8;
   
   // Apply altitude corrections
-  altitude_hold_correction -= velocity_estimate + altitude_estimate;
+  altitude_hold_correction -= velocity_estimate + baro_alt - altitude_hold_control;
   
   // Push data to motors
   set_velocities();
