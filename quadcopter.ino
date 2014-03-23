@@ -10,7 +10,7 @@
 
 // Settings
 #define POSITION_FEEDBACK 200.0       // This is the pitch/roll feedback amount
-#define POSITION_FEEDBACK_Z 20        // This is the yaw feedback amount
+#define POSITION_FEEDBACK_Z 30        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.11           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.1          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
@@ -107,7 +107,7 @@ void loop()
   output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
   
   // Limit extremes of yaw correction
-  if(output_z < -200) output_z = -200;  if(output_z >  200) output_z =  200;
+  if(output_z < -230) output_z = -300;  if(output_z >  300) output_z =  300;
 
   // Calculate throttle correction based on pitch/roll and control input
   // 310 Seems to be a good value for this
