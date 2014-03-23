@@ -13,10 +13,10 @@ void set_velocities() {
   }
   
   // Calculate motor speeds
-  int fl=1064 + (400 + output_x - output_y + output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
-  int fr=1064 + (400 - output_x - output_y - output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
-  int rl=1064 + (400 + output_x + output_y - output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
-  int rr=1064 + (400 - output_x + output_y + output_z + altitude_hold_correction) * 0.5 * armed + 400 * ratio;
+  int fl=1064 + (400 + output_x - output_y + output_z + altitude_hold_correction) * 0.5 * armed + 600 * ratio;
+  int fr=1064 + (400 - output_x - output_y - output_z + altitude_hold_correction) * 0.5 * armed + 600 * ratio;
+  int rl=1064 + (400 + output_x + output_y - output_z + altitude_hold_correction) * 0.5 * armed + 600 * ratio;
+  int rr=1064 + (400 - output_x + output_y + output_z + altitude_hold_correction) * 0.5 * armed + 600 * ratio;
   
   // Limit extremes to avoid confusing ESCs
   if(fl < 1064) fl = 1064;  if(fl > 2200) fl = 2200;
