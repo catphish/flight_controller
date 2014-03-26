@@ -45,6 +45,7 @@ int accel_z;                          // Measured vertical acceleration
 double velocity_estimate;             // Integrated vertical acceleration (velocity)
 double altitude_estimate;             // Integrated vertical velocity (altitude)
 double prev_aii;                      // Used to calculate velocity correction
+double altitude_error;                // Used to calculate velocity correction
 double pressure;                      // Current measured pressure
 double initial_pressure;              // Initial pressure
 double baro_alt;                      // The measured altitude
@@ -115,13 +116,14 @@ void loop()
   
   // Calculate altitude and vertical velocity
   baro_alt = (initial_pressure - pressure);
-  velocity_estimate += (accel_z * 0.005);
-  altitude_estimate += velocity_estimate * 0.01;
+  velocity_estimate += accel_z * 0.005;
+  altitude_estimate += velocity_estimate * 0.005;
   
   // Correct with barometer
   prev_aii = altitude_estimate;
-  altitude_estimate = altitude_estimate * 0.98 + baro_alt * 0.02;
-  velocity_estimate += (altitude_estimate - prev_aii) * 0.8;
+  altitude_error = baro_alt - altitude_estimate;
+  altitude_estimate += altitude_error * 0.01;
+  velocity_estimate += altitude_error * 0.03;
   
   // Apply altitude corrections
   altitude_hold_correction -= velocity_estimate * 1 + baro_alt * 1 - altitude_hold_control * 5;
@@ -129,12 +131,15 @@ void loop()
   // Push data to motors
   set_velocities();
   
-  //Serial.print(baro_alt);
-  //Serial.print(",");
-  //Serial.print(velocity_estimate);
-  //Serial.print(",");
-  //Serial.print(altitude_estimate);
-  //Serial.print("\n");
-  
+  Serial.print(accel_z);
+  Serial.print(",");
+  Serial.print(baro_alt);
+  Serial.print(",");
+  Serial.print(velocity_estimate);
+  Serial.print(",");
+  Serial.print(altitude_estimate);
+  Serial.print(",");
+  Serial.print(altitude_error);
+  Serial.print("\n");
 }
 

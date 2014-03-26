@@ -56,6 +56,7 @@ void mpuGetXY() {
       
       mpu.dmpGetEuler(euler, &q);
       upside_down = (abs(euler[2]) > 1.570795);
+      
     }
   }
 }
