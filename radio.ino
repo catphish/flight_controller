@@ -11,6 +11,7 @@ unsigned long channel_3_prev;
 unsigned long channel_4_prev;
 unsigned long channel_5_prev;
 unsigned long channel_6_prev;
+unsigned long channel_7_prev;
 
 double previous_altitude_hold_control=1000;
 
@@ -58,21 +59,28 @@ SIGNAL(PCINT2_vect) {
       channel_6_prev = micros();
     }
   }
+  if(x & 0x40) {
+    if(previous_pink & 0x40) {
+      channel_7 = micros() - channel_7_prev;
+    } else {
+      channel_7_prev = micros();
+    }
+  }
   previous_pink=PINK;
 }
 
 void process_rc_data() {
-  smoothed_control_x = smoothed_control_x * 0.9 + (channel_1 - 1500) * CONTROL_SENSITIVITY * 0.1;
-  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1500) * CONTROL_SENSITIVITY * 0.1;
-  smoothed_control_t = smoothed_control_t * 0.9 + (channel_3 - 1150) * 0.1;
-  if(abs(channel_4 - 1500) > 30) {
-    smoothed_control_z += (channel_4 - 1500) * CONTROL_SENSITIVITY_Z * 0.001;
+  smoothed_control_x = smoothed_control_x * 0.9 + (channel_1 - 1520) * CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_y = smoothed_control_y * 0.9 + (channel_2 - 1520) * CONTROL_SENSITIVITY * 0.1;
+  smoothed_control_t = smoothed_control_t * 0.9 + (channel_3 - 1120) * 0.1;
+  if(abs(channel_4 - 1520) > 30) {
+    smoothed_control_z += (channel_4 - 1520) * CONTROL_SENSITIVITY_Z * 0.001;
     if(smoothed_control_z > 360.0) smoothed_control_z -= 360.0;
     if(smoothed_control_z < 0.0)   smoothed_control_z += 360.0;
   }
-  armed = channel_5 > 1500;
+  armed = channel_5 > 1800;
 
-  altitude_hold_control = altitude_hold_control * 0.9 + (channel_6 - 1000) * 0.1;
+  altitude_hold_control = altitude_hold_control * 0.9 + (channel_7 - 1120) * 0.1;
   if (altitude_hold_control < 0) altitude_hold_control = 0;
   if (altitude_hold_control > 1000) altitude_hold_control = 1000;
   previous_altitude_hold_control = altitude_hold_control;

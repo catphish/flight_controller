@@ -10,7 +10,7 @@
 
 // Settings
 #define POSITION_FEEDBACK 250.0       // This is the pitch/roll feedback amount
-#define POSITION_FEEDBACK_Z 40        // This is the yaw feedback amount
+#define POSITION_FEEDBACK_Z 50        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.11           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.2          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
@@ -25,6 +25,7 @@ long channel_3;
 long channel_4;
 long channel_5;
 long channel_6;
+long channel_7;
 
 // Global Variables and Objects
 double smoothed_control_x=0;          // Smoothed RC Input
@@ -108,7 +109,7 @@ void loop()
   output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
   
   // Limit extremes of yaw correction
-  if(output_z < -400) output_z = -400;  if(output_z >  400) output_z =  400;
+  if(output_z < -200) output_z = -200;  if(output_z >  200) output_z =  200;
 
   // Calculate throttle correction based on pitch/roll and control input
   // 310 Seems to be a good value for this
@@ -126,20 +127,33 @@ void loop()
   velocity_estimate += altitude_error * 0.03;
   
   // Apply altitude corrections
-  altitude_hold_correction -= velocity_estimate * 1 + baro_alt * 1 - altitude_hold_control * 5;
-  
+  altitude_hold_correction -= velocity_estimate * 0.5 + baro_alt * 0.5 - altitude_hold_control * 1;
+  if(altitude_hold_correction < -400) altitude_hold_correction = -400;
+  if(altitude_hold_correction >  400) altitude_hold_correction =  400;
+
   // Push data to motors
   set_velocities();
   
-  Serial.print(accel_z);
-  Serial.print(",");
-  Serial.print(baro_alt);
-  Serial.print(",");
-  Serial.print(velocity_estimate);
-  Serial.print(",");
-  Serial.print(altitude_estimate);
-  Serial.print(",");
-  Serial.print(altitude_error);
-  Serial.print("\n");
+  //Serial.print(altitude_hold_control);
+  //Serial.print(",");
+  //Serial.print(smoothed_control_t);
+  //Serial.print(",");
+  //Serial.print(channel_3);
+  //Serial.print(",");
+  //Serial.print(channel_4);
+  //Serial.print(",");
+  //Serial.print(channel_5);
+  //Serial.print(",");
+  //Serial.print(channel_6);
+  //Serial.print(",");
+  //Serial.print(channel_7);
+  //Serial.print(baro_alt);
+  //Serial.print(",");
+  //Serial.print(velocity_estimate);
+  //Serial.print(",");
+  //Serial.print(altitude_estimate);
+  //Serial.print(",");
+  //Serial.print(altitude_error);
+  //Serial.print("\n");
 }
 

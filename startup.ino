@@ -13,6 +13,7 @@ void setup()
   pinMode(A11, INPUT);
   pinMode(A12, INPUT);
   pinMode(A13, INPUT);
+  pinMode(A14, INPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
@@ -41,7 +42,7 @@ void setup()
   
   // Enabling controls
   cli();		// switch interrupts off while messing with their settings  
-  PCMSK2 |= (1<<PCINT16)|(1<<PCINT17)|(1<<PCINT18)|(1<<PCINT19)|(1<<PCINT20)|(1<<PCINT21);
+  PCMSK2 |= (1<<PCINT16)|(1<<PCINT17)|(1<<PCINT18)|(1<<PCINT19)|(1<<PCINT20)|(1<<PCINT21)|(1<<PCINT22);
   PCICR  |= (1<<PCIE2);
   
   // Starting Engines
