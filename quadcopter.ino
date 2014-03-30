@@ -11,7 +11,7 @@
 // Settings
 #define POSITION_FEEDBACK 250.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 50        // This is the yaw feedback amount
-#define GYRO_FEEDBACK  0.11           // Rotational velovity correction
+#define GYRO_FEEDBACK  0.10           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.2          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
@@ -66,7 +66,7 @@ void loop()
   // Fetch data
   mpuGetXY();
   n++;
-  if(n == 3) {
+  if(n == 4) {
     msGetPressure();
     n = 0;
   }

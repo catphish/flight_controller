@@ -1,11 +1,11 @@
 #include "RunningMedian.h"
-RunningMedian samples = RunningMedian(10);
+RunningMedian samples = RunningMedian(6);
 
 void msGetPressure() {
   float t, p;
   barometer.readValues(&p, &t);
   samples.add(p*1000);
-  pressure = samples.getAverage(8);
+  pressure = samples.getAverage(4);
 }
 
 void msSetup() {
