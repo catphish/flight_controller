@@ -9,7 +9,7 @@
 #include "Wire.h"
 
 // Settings
-#define POSITION_FEEDBACK 250.0       // This is the pitch/roll feedback amount
+#define POSITION_FEEDBACK 280.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 50        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.10           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.2          // Yaw velovity correction
@@ -80,8 +80,8 @@ void loop()
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
   
   // Integrate pitch and roll to counter any permanent imbalance
-  integrated_x += x * INTEGRATION_AMOUNT;
-  integrated_y += y * INTEGRATION_AMOUNT;
+  integrated_x += (smoothed_control_x - pos_x * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
+  integrated_y += (smoothed_control_y - pos_y * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
   
   // Reset integrals and yaw if throttle is zero
   if(smoothed_control_t < 50) {
@@ -100,7 +100,7 @@ void loop()
   output_y = y + integrated_y;
   
   // Don't correct yaw difference at extremes of pitch/roll, gimbal lock makes a mess of this
-  z *= (1.570795 - abs(pos_x) - abs(pos_y)) / 1.570795;
+  z *= pow((1.570795 - abs(pos_x) - abs(pos_y)) / 1.570795, 2);
   
   // Adjusting yaw upside down is inaccurate and really quite pointless
   if(upside_down) z = 0;
@@ -128,8 +128,8 @@ void loop()
   
   // Apply altitude corrections
   altitude_hold_correction -= velocity_estimate * 0.5 + baro_alt * 0.5 - altitude_hold_control * 1;
-  if(altitude_hold_correction < -400) altitude_hold_correction = -400;
-  if(altitude_hold_correction >  400) altitude_hold_correction =  400;
+  if(altitude_hold_correction < -300) altitude_hold_correction = -300;
+  if(altitude_hold_correction >  300) altitude_hold_correction =  300;
 
   // Push data to motors
   set_velocities();
