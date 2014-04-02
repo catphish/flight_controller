@@ -9,14 +9,14 @@
 #include "Wire.h"
 
 // Settings
-#define POSITION_FEEDBACK 250.0       // This is the pitch/roll feedback amount
+#define POSITION_FEEDBACK 220.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 50        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.09           // Rotational velovity correction
 #define GYRO_FEEDBACK_Z  0.2          // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
-#define INTEGRATION_AMOUNT 0.002      // Pitch/roll integration amount
-#define ALTITUDE_HOLD_ADJUSTMENT 350  // Throttle to add based on pitch/roll
+#define INTEGRATION_AMOUNT 0.001      // Pitch/roll integration amount
+#define ALTITUDE_HOLD_ADJUSTMENT 310  // Throttle to add based on pitch/roll
 
 // RC Channels
 long channel_1;
@@ -80,8 +80,8 @@ void loop()
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
   
   // Integrate pitch and roll to counter any permanent imbalance
-  integrated_x += x * INTEGRATION_AMOUNT;
-  integrated_y += y * INTEGRATION_AMOUNT;
+  integrated_x += (smoothed_control_x - pos_x * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
+  integrated_y += (smoothed_control_y - pos_y * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
   
   // Reset integrals and yaw if throttle is zero
   if(!armed) {
@@ -115,22 +115,24 @@ void loop()
   // 310 Seems to be a good value for this
   altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * ALTITUDE_HOLD_ADJUSTMENT;
   
-  // Calculate barometer altitude
-  baro_alt = (initial_pressure - pressure);
-  
-  // Apply altitude corrections
-  altitude_hold_correction -= accel_z * 0.1 + baro_alt * 0.2;
-  if(altitude_hold_correction < -400) altitude_hold_correction = -400;
-  if(altitude_hold_correction >  400) altitude_hold_correction =  400;
+   // Calculate altitude and vertical velocity
+   baro_alt = (initial_pressure - pressure);
+   velocity_estimate += accel_z * 0.005;
+   altitude_estimate += velocity_estimate * 0.005;
+   
+   // Correct with barometer
+   prev_aii = altitude_estimate;
+   altitude_error = baro_alt - altitude_estimate;
+   altitude_estimate += altitude_error * 0.01;
+   velocity_estimate += altitude_error * 0.03;
+   
+   // Apply altitude corrections
+   altitude_hold_correction -= velocity_estimate * 0.5 + baro_alt * 0.4 - altitude_hold_control * 1;
+   if(altitude_hold_correction < -200) altitude_hold_correction = -200;
+   if(altitude_hold_correction >  200) altitude_hold_correction =  200;
 
   // Push data to motors
   set_velocities();
   
-  Serial.print(altitude_hold_correction);
-  Serial.print(",");
-  Serial.print(baro_alt);
-  Serial.print(",");
-  Serial.print(accel_z);
-  Serial.print("\n");
 }
 
