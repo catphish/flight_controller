@@ -12,6 +12,7 @@ unsigned long channel_4_prev;
 unsigned long channel_5_prev;
 unsigned long channel_6_prev;
 unsigned long channel_7_prev;
+int previous_gps_enabled;
 
 double previous_altitude_hold_control=1000;
 
@@ -84,5 +85,28 @@ void process_rc_data() {
   if (altitude_hold_control < 0) altitude_hold_control = 0;
   if (altitude_hold_control > 1000) altitude_hold_control = 1000;
   previous_altitude_hold_control = altitude_hold_control;
+  
+  if(channel_6 > 1520) {
+    if(initial_gps_lat && gps_online) {
+      gps_enabled = 1;
+    } else if (gps_online) {
+      initial_gps_lat  = gps_lat;
+      initial_gps_long = gps_long;
+      gps_enabled = 1;
+    } else {
+      initial_gps_lat  = 0;
+      initial_gps_long = 0;
+      gps_enabled = 0;
+    }
+  } else {
+    gps_enabled = 0;
+    if(gps_online) {
+      initial_gps_lat  = gps_lat;
+      initial_gps_long = gps_long;
+    } else {
+      initial_gps_lat  = 0;
+      initial_gps_long = 0;
+    }
+  }
 }
 

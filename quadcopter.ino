@@ -6,6 +6,7 @@
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "MS561101BA.h"
+#include "HMC5883L.h"
 #include "Wire.h"
 
 // Settings
@@ -35,12 +36,18 @@ double smoothed_control_z=0;          // Smoothed RC Input
 
 int armed=0;                          // Motors enabled
 double pos_x, pos_y, pos_z;           // IMU input
+float heading;
 boolean upside_down;
 double gyro_x, gyro_y, gyro_z;        // Gyro Input
 double output_x, output_y, output_z;  // Stabilization Output
 double altitude_hold_correction;      // Altitude hold output
 double altitude_hold_control;         // Altitude hold amount selection
 int n=0;
+
+int accel_x;                          // Measured horizontal acceleration
+int accel_y;                          // Measured horizontal acceleration
+double velocity_estimate_x;           // Integrated acceleration (velocity x)
+double velocity_estimate_y;           // Integrated acceleration (velocity y)
 
 int accel_z;                          // Measured vertical acceleration
 double velocity_estimate;             // Integrated vertical acceleration (velocity)
@@ -54,7 +61,17 @@ double baro_alt;                      // The measured altitude
 double integrated_x=0;                // Integration of roll
 double integrated_y=0;                // Integration of pitch
 
+double gps_lat;
+double gps_long;
+double initial_gps_lat;
+double initial_gps_long;
+double gps_offset_lat;
+double gps_offset_long;
+int gps_enabled;
+int gps_online;
+
 MPU6050 mpu;                          // Motion processor
+HMC5883L mag;                         // Compass
 bool dmpReady = false;                // set true if MPU initizlization was successful
 MS561101BA barometer(B1110111);       // Barometer
 
@@ -65,9 +82,11 @@ void loop()
   
   // Fetch data
   mpuGetXY();
+  getLocation();
   n++;
   if(n == 4) {
     msGetPressure();
+    getHeading();
     n = 0;
   }
   
@@ -79,15 +98,23 @@ void loop()
   x = smoothed_control_x - pos_x * POSITION_FEEDBACK - gyro_x * GYRO_FEEDBACK;
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
   
+  pos_z += gyro_z * 0.00075;
+  if (pos_z > 360) pos_z -= 360; // Try to find the most efficient path to correct yaw
+  if (pos_z < 0  ) pos_z += 360; // Try to find the most efficient path to correct yaw
+  float error_z = heading - pos_z;
+  if (error_z >  180) error_z -= 360; // Try to find the most efficient path to correct yaw
+  if (error_z < -180) error_z += 360; // Try to find the most efficient path to correct yaw
+  pos_z += error_z * 0.005;
+  
   // Integrate pitch and roll to counter any permanent imbalance
   integrated_x += (smoothed_control_x - pos_x * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
   integrated_y += (smoothed_control_y - pos_y * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
   
   // Reset integrals and yaw if throttle is zero
-  if(smoothed_control_t < 50) {
+  if(!armed) {
     integrated_x = 0;
     integrated_y = 0;
-    smoothed_control_z = pos_z;
+    smoothed_control_z = pos_z = heading;
   }
   
   // Calculate basic yaw correction
@@ -131,29 +158,32 @@ void loop()
   if(altitude_hold_correction < -300) altitude_hold_correction = -300;
   if(altitude_hold_correction >  300) altitude_hold_correction =  300;
 
+  // Calculate drift velocity
+  //if (millis() > 20000) {
+  //  velocity_estimate_x += accel_x * 0.02;
+  //  velocity_estimate_y += accel_y * 0.02;
+  //}
+  
+  if(gps_enabled) {
+    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * 1000000;
+    gps_offset_long = (gps_long - initial_gps_long) * 1000000;
+    if(gps_offset_lat  < -200) gps_offset_lat  = -200;
+    if(gps_offset_lat  >  200) gps_offset_lat  =  200;
+    if(gps_offset_long < -200) gps_offset_long = -200;
+    if(gps_offset_long >  200) gps_offset_long =  200;
+    output_y += gps_offset_lat * cos(pos_z) + gps_offset_long * sin(pos_z);
+    output_x += gps_offset_lat * sin(pos_z) + gps_offset_long * cos(pos_z);
+  }
+  
   // Push data to motors
   set_velocities();
   
-  //Serial.print(altitude_hold_control);
+  //Serial.print(gyro_z);
   //Serial.print(",");
-  //Serial.print(smoothed_control_t);
+  //Serial.print(pos_z);
   //Serial.print(",");
-  //Serial.print(channel_3);
-  //Serial.print(",");
-  //Serial.print(channel_4);
-  //Serial.print(",");
-  //Serial.print(channel_5);
-  //Serial.print(",");
-  //Serial.print(channel_6);
-  //Serial.print(",");
-  //Serial.print(channel_7);
-  //Serial.print(baro_alt);
-  //Serial.print(",");
-  //Serial.print(velocity_estimate);
-  //Serial.print(",");
-  //Serial.print(altitude_estimate);
-  //Serial.print(",");
-  //Serial.print(altitude_error);
+  //Serial.print(heading);
   //Serial.print("\n");
+  
 }
 

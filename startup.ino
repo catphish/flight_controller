@@ -6,6 +6,7 @@
 void setup()
 {
   Serial.begin(115200);
+  Serial3.begin(9600);
   // Initializing controller ports
   pinMode(A8, INPUT);
   pinMode(A9, INPUT);
@@ -39,6 +40,7 @@ void setup()
   }
   
   msSetup();
+  mag.initialize();
   
   // Enabling controls
   cli();		// switch interrupts off while messing with their settings  

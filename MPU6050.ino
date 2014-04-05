@@ -40,11 +40,13 @@ void mpuGetXY() {
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
       mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
       mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+      accel_x = aaWorld.x;
+      accel_y = aaWorld.y;
       accel_z = aaWorld.z;
       
       pos_x =  ypr[2];
       pos_y = -ypr[1];
-      pos_z =  ypr[0] * 180 / 3.14159;
+      //pos_z =  ypr[0] * 180 / 3.14159; // We have a compass for this now
       if(pos_z < 0.0) pos_z += 360.0;
       // Get gyro data from MPU
       int ax, ay, az, gx, gy, gz;
