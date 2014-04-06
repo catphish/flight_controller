@@ -3,6 +3,7 @@
 int16_t mx, my, mz;
 RunningMedian cax = RunningMedian(6);
 RunningMedian cay = RunningMedian(6);
+float h_tmp;
 
 void getHeading() {
   // Read raw heading measurements from device
@@ -24,16 +25,16 @@ void getHeading() {
   cay.add(yh);
 
   // To calculate heading in degrees. 0 degree indicates North
-  heading = atan2(cay.getAverage(4), cax.getAverage(4));
-  heading -= M_PI/2;
+  h_tmp = atan2(cay.getAverage(4), cax.getAverage(4));
+  h_tmp -= M_PI/2;
 
   // Convert to degrees
-  heading *= 180/M_PI;
+  heading = h_tmp * 1160000000 / (M_PI*2);
 
   // Adjust for Dorset
-  heading -= 1.73;
+  heading -= 5574444.444444444;
   
   // Ensure reading is always positive positive
-  if(heading < 0) heading += 360;
+  if(heading < 0) heading += 1160000000;
 }
 

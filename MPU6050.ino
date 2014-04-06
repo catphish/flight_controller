@@ -22,6 +22,14 @@ VectorFloat gravity; // [x, y, z] gravity vector
 float euler[3]; // [psi, theta, phi] Euler angle container
 float ypr[3]; // [yaw, pitch, roll] yaw/pitch/roll container and gravity vector
 
+void ntohl(uint32_t* value) {
+  uint32_t tmp_a = (*value & 0xff000000) >> 24;
+  uint32_t tmp_b = (*value & 0x00ff0000) >> 8;
+  uint32_t tmp_c = (*value & 0x0000ff00) << 8 ;
+  uint32_t tmp_d = (*value & 0x000000ff) << 24;
+  *value = tmp_d | tmp_c |tmp_b | tmp_a;
+}
+
 void mpuGetXY() {
   mpuIntStatus = mpu.getIntStatus();
   fifoCount = mpu.getFIFOCount();
@@ -46,19 +54,35 @@ void mpuGetXY() {
       
       pos_x =  ypr[2];
       pos_y = -ypr[1];
-      //pos_z =  ypr[0] * 180 / 3.14159; // We have a compass for this now
-      if(pos_z < 0.0) pos_z += 360.0;
       // Get gyro data from MPU
       int ax, ay, az, gx, gy, gz;
       mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       
       gyro_x = (gx);
       gyro_y = (gy);
-      gyro_z = (-gz);
       
       mpu.dmpGetEuler(euler, &q);
       upside_down = (abs(euler[2]) > 1.570795);
       
+      // Fetch high resolution Z gyro data
+      memcpy(&gyro_data_z, fifoBuffer+24, 4);
+      ntohl((uint32_t*)&gyro_data_z);
+      integrated_gyro_data_z -= gyro_data_z;
+      
+      // Integrate rotation
+      if (integrated_gyro_data_z > 1160000000) integrated_gyro_data_z -= 1160000000;
+      if (integrated_gyro_data_z < 0  ) integrated_gyro_data_z += 1160000000;
+      
+      // Correct with compass data
+      float error_z = heading - integrated_gyro_data_z;
+      if (error_z >  580000000) error_z -= 1160000000; // Try to find the most efficient path to correct yaw
+      if (error_z < -580000000) error_z += 1160000000; // Try to find the most efficient path to correct yaw
+      if (error_z >  1000) error_z =  1000;
+      if (error_z < -1000) error_z = -1000;
+      integrated_gyro_data_z += error_z;
+      
+      // Calculate in radians
+      pos_z_rad = integrated_gyro_data_z / 184619733.986598604;
     }
   }
 }

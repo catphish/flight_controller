@@ -35,14 +35,18 @@ double smoothed_control_t=0;          // Smoothed RC Input
 double smoothed_control_z=0;          // Smoothed RC Input
 
 int armed=0;                          // Motors enabled
-double pos_x, pos_y, pos_z;           // IMU input
-float heading;
+double pos_x, pos_y;                  // IMU input
+long int heading;
 boolean upside_down;
-double gyro_x, gyro_y, gyro_z;        // Gyro Input
+double gyro_x, gyro_y;                // Gyro Input
 double output_x, output_y, output_z;  // Stabilization Output
 double altitude_hold_correction;      // Altitude hold output
 double altitude_hold_control;         // Altitude hold amount selection
 int n=0;
+
+int32_t gyro_data_z;
+long int integrated_gyro_data_z;
+double pos_z_rad;
 
 int accel_x;                          // Measured horizontal acceleration
 int accel_y;                          // Measured horizontal acceleration
@@ -98,14 +102,6 @@ void loop()
   x = smoothed_control_x - pos_x * POSITION_FEEDBACK - gyro_x * GYRO_FEEDBACK;
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
   
-  pos_z += gyro_z * 0.00075;
-  if (pos_z > 360) pos_z -= 360; // Try to find the most efficient path to correct yaw
-  if (pos_z < 0  ) pos_z += 360; // Try to find the most efficient path to correct yaw
-  float error_z = heading - pos_z;
-  if (error_z >  180) error_z -= 360; // Try to find the most efficient path to correct yaw
-  if (error_z < -180) error_z += 360; // Try to find the most efficient path to correct yaw
-  pos_z += error_z * 0.005;
-  
   // Integrate pitch and roll to counter any permanent imbalance
   integrated_x += (smoothed_control_x - pos_x * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
   integrated_y += (smoothed_control_y - pos_y * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
@@ -114,11 +110,11 @@ void loop()
   if(!armed) {
     integrated_x = 0;
     integrated_y = 0;
-    smoothed_control_z = pos_z = heading;
+    smoothed_control_z = (integrated_gyro_data_z = heading) / 3222222.222222222;
   }
   
   // Calculate basic yaw correction
-  z = smoothed_control_z - pos_z;
+  z = smoothed_control_z - (integrated_gyro_data_z / 3222222.222222222);
   if (z >  180) z -= 360; // Try to find the most efficient path to correct yaw
   if (z < -180) z += 360; // Try to find the most efficient path to correct yaw
   
@@ -133,11 +129,11 @@ void loop()
   if(upside_down) z = 0;
   
   // Apply the yaw gyro feedback
-  output_z = z * POSITION_FEEDBACK_Z - gyro_z * GYRO_FEEDBACK_Z;
+  output_z = z * POSITION_FEEDBACK_Z + (gyro_data_z * GYRO_FEEDBACK_Z) / 512;
   
   // Limit extremes of yaw correction
   if(output_z < -200) output_z = -200;  if(output_z >  200) output_z =  200;
-
+  
   // Calculate throttle correction based on pitch/roll and control input
   // 310 Seems to be a good value for this
   altitude_hold_correction = (abs(pos_x) + abs(pos_y)) * ALTITUDE_HOLD_ADJUSTMENT;
@@ -145,24 +141,22 @@ void loop()
   // Calculate altitude and vertical velocity
   baro_alt = (initial_pressure - pressure);
   velocity_estimate += accel_z * 0.005;
-  altitude_estimate += velocity_estimate * 0.005;
+  altitude_estimate += velocity_estimate * 0.007;
   
   // Correct with barometer
   prev_aii = altitude_estimate;
   altitude_error = baro_alt - altitude_estimate;
-  altitude_estimate += altitude_error * 0.01;
-  velocity_estimate += altitude_error * 0.03;
+  altitude_estimate += altitude_error * 0.02;
+  velocity_estimate += altitude_error * 0.01;
   
   // Apply altitude corrections
   altitude_hold_correction -= velocity_estimate * 0.5 + baro_alt * 0.5 - altitude_hold_control * 1;
   if(altitude_hold_correction < -300) altitude_hold_correction = -300;
   if(altitude_hold_correction >  300) altitude_hold_correction =  300;
-
+  
   // Calculate drift velocity
-  //if (millis() > 20000) {
-  //  velocity_estimate_x += accel_x * 0.02;
-  //  velocity_estimate_y += accel_y * 0.02;
-  //}
+  velocity_estimate_x += accel_x * 0.02;
+  velocity_estimate_y += accel_y * 0.02;
   
   if(gps_enabled) {
     gps_offset_lat  = (gps_lat  - initial_gps_lat)  * -1000000;
@@ -171,19 +165,11 @@ void loop()
     if(gps_offset_lat  >  200) gps_offset_lat  =  200;
     if(gps_offset_long < -200) gps_offset_long = -200;
     if(gps_offset_long >  200) gps_offset_long =  200;
-    output_y += gps_offset_lat * cos(pos_z) + gps_offset_long * sin(pos_z);
-    output_x += gps_offset_lat * sin(pos_z) + gps_offset_long * cos(pos_z);
+    output_y += gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
+    output_x += gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
   }
   
   // Push data to motors
   set_velocities();
-  
-  //Serial.print(gyro_z);
-  //Serial.print(",");
-  //Serial.print(pos_z);
-  //Serial.print(",");
-  //Serial.print(heading);
-  //Serial.print("\n");
-  
 }
 
