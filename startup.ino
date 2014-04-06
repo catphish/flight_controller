@@ -19,39 +19,36 @@ void setup()
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(13, OUTPUT);
-  
+
   // Initializing Gyros and DMP
   Wire.begin();
   TWBR = 24;                       // 400kHz I2C clock
   devStatus = mpu.dmpInitialize(); // Initislize DMP
-  
-  //mpu.setXGyroOffset(51);
-  //mpu.setYGyroOffset(-55);
-  //mpu.setZGyroOffset(4);
-  //mpu.setXAccelOffset(380);
-  //mpu.setYAccelOffset(1638);
-  //mpu.setZAccelOffset(900);
-  
+
+  mpu.setXGyroOffset(50);
+  mpu.setYGyroOffset(-55);
+  mpu.setZGyroOffset(6);
+  mpu.setZAccelOffset(888);
+
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
     mpuIntStatus = mpu.getIntStatus();
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
-  
+
   msSetup();
   mag.initialize();
-  
+
   // Enabling controls
   cli();		// switch interrupts off while messing with their settings  
   PCMSK2 |= (1<<PCINT16)|(1<<PCINT17)|(1<<PCINT18)|(1<<PCINT19)|(1<<PCINT20)|(1<<PCINT21)|(1<<PCINT22);
   PCICR  |= (1<<PCIE2);
-  
+
   // Starting Engines
   PORTB=0;    // Clear any motor outputs
   TCCR1A = 0; // Set up high resolution timer
   TCCR1B = 2; // Set up high resolution timer
   sei();      // turn interrupts back on
 }
-
 
