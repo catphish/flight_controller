@@ -165,8 +165,8 @@ void loop()
   //}
   
   if(gps_enabled) {
-    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * 1000000;
-    gps_offset_long = (gps_long - initial_gps_long) * 1000000;
+    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * -1000000;
+    gps_offset_long = (gps_long - initial_gps_long) * -1000000;
     if(gps_offset_lat  < -200) gps_offset_lat  = -200;
     if(gps_offset_lat  >  200) gps_offset_lat  =  200;
     if(gps_offset_long < -200) gps_offset_long = -200;
