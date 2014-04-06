@@ -28,6 +28,7 @@ void setup()
   mpu.setXGyroOffset(50);
   mpu.setYGyroOffset(-55);
   mpu.setZGyroOffset(6);
+  mpu.setXAccelOffset(370);
   mpu.setZAccelOffset(888);
 
   if (devStatus == 0) {
