@@ -111,8 +111,11 @@ void loop()
     gps_offset_long = (gps_long - initial_gps_long) * 200000;
     
     // Rotate to x/y offset
-    gps_offset_x = gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
-    gps_offset_y = gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
+    gps_offset_x = gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
+    gps_offset_y = gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
+    
+    x -= gps_offset_x;
+    y -= gps_offset_y;
   }
   
   // Integrate pitch and roll to counter any permanent imbalance
