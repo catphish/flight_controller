@@ -71,6 +71,9 @@ double initial_gps_lat;
 double initial_gps_long;
 double gps_offset_lat;
 double gps_offset_long;
+double gps_offset_x;
+double gps_offset_y;
+
 int gps_enabled;
 int gps_online;
 
@@ -103,14 +106,13 @@ void loop()
   y = smoothed_control_y - pos_y * POSITION_FEEDBACK;
   
   if(gps_enabled) {
-    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * 1000000;
-    gps_offset_long = (gps_long - initial_gps_long) * 1000000;
-    if(gps_offset_lat  < -200) gps_offset_lat  = -200;
-    if(gps_offset_lat  >  200) gps_offset_lat  =  200;
-    if(gps_offset_long < -200) gps_offset_long = -200;
-    if(gps_offset_long >  200) gps_offset_long =  200;
-    y -= gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
-    x -= gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
+    // Calculate relatve GPS location
+    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * 200000;
+    gps_offset_long = (gps_long - initial_gps_long) * 200000;
+    
+    // Rotate to x/y offset
+    gps_offset_x = gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
+    gps_offset_y = gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
   }
   
   // Integrate pitch and roll to counter any permanent imbalance
@@ -164,10 +166,6 @@ void loop()
   altitude_hold_correction -= velocity_estimate * 0.5 + baro_alt * 0.5 - altitude_hold_control * 1;
   if(altitude_hold_correction < -300) altitude_hold_correction = -300;
   if(altitude_hold_correction >  300) altitude_hold_correction =  300;
-  
-  // Calculate drift velocity
-  //velocity_estimate_x += accel_x * 0.02;
-  //velocity_estimate_y += accel_y * 0.02;
   
   // Push data to motors
   set_velocities();

@@ -48,8 +48,9 @@ void mpuGetXY() {
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
       mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
       mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-      accel_x = aaWorld.x;
-      accel_y = aaWorld.y;
+      
+      accel_x = aaReal.x;
+      accel_y = aaReal.y;
       accel_z = aaWorld.z;
       
       pos_x =  ypr[2];
