@@ -13,7 +13,7 @@
 #define POSITION_FEEDBACK 280.0       // This is the pitch/roll feedback amount
 #define POSITION_FEEDBACK_Z 50        // This is the yaw feedback amount
 #define GYRO_FEEDBACK  0.10           // Rotational velovity correction
-#define GYRO_FEEDBACK_Z  0.2          // Yaw velovity correction
+#define GYRO_FEEDBACK_Z  0.07         // Yaw velovity correction
 #define CONTROL_SENSITIVITY 0.5       // Pitch/roll control sensitivity
 #define CONTROL_SENSITIVITY_Z 1.0     // Yaw control sensitivity
 #define INTEGRATION_AMOUNT 0.002      // Pitch/roll integration amount
@@ -99,12 +99,23 @@ void loop()
   
   // Calculate proportial responses with gyro correction
   double x, y, z;
-  x = smoothed_control_x - pos_x * POSITION_FEEDBACK - gyro_x * GYRO_FEEDBACK;
-  y = smoothed_control_y - pos_y * POSITION_FEEDBACK - gyro_y * GYRO_FEEDBACK;
+  x = smoothed_control_x - pos_x * POSITION_FEEDBACK;
+  y = smoothed_control_y - pos_y * POSITION_FEEDBACK;
+  
+  if(gps_enabled) {
+    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * 1000000;
+    gps_offset_long = (gps_long - initial_gps_long) * 1000000;
+    if(gps_offset_lat  < -200) gps_offset_lat  = -200;
+    if(gps_offset_lat  >  200) gps_offset_lat  =  200;
+    if(gps_offset_long < -200) gps_offset_long = -200;
+    if(gps_offset_long >  200) gps_offset_long =  200;
+    y -= gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
+    x -= gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
+  }
   
   // Integrate pitch and roll to counter any permanent imbalance
-  integrated_x += (smoothed_control_x - pos_x * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
-  integrated_y += (smoothed_control_y - pos_y * POSITION_FEEDBACK) * INTEGRATION_AMOUNT;
+  integrated_x += x * INTEGRATION_AMOUNT;
+  integrated_y += y * INTEGRATION_AMOUNT;
   
   // Reset integrals and yaw if throttle is zero
   if(!armed) {
@@ -119,8 +130,8 @@ void loop()
   if (z < -180) z += 360; // Try to find the most efficient path to correct yaw
   
   // Apply the integrals
-  output_x = x + integrated_x;
-  output_y = y + integrated_y;
+  output_x = x + integrated_x - gyro_x * GYRO_FEEDBACK;
+  output_y = y + integrated_y - gyro_y * GYRO_FEEDBACK;
   
   // Don't correct yaw difference at extremes of pitch/roll, gimbal lock makes a mess of this
   z *= pow((1.570795 - abs(pos_x) - abs(pos_y)) / 1.570795, 2);
@@ -155,19 +166,8 @@ void loop()
   if(altitude_hold_correction >  300) altitude_hold_correction =  300;
   
   // Calculate drift velocity
-  velocity_estimate_x += accel_x * 0.02;
-  velocity_estimate_y += accel_y * 0.02;
-  
-  if(gps_enabled) {
-    gps_offset_lat  = (gps_lat  - initial_gps_lat)  * -1000000;
-    gps_offset_long = (gps_long - initial_gps_long) * -1000000;
-    if(gps_offset_lat  < -200) gps_offset_lat  = -200;
-    if(gps_offset_lat  >  200) gps_offset_lat  =  200;
-    if(gps_offset_long < -200) gps_offset_long = -200;
-    if(gps_offset_long >  200) gps_offset_long =  200;
-    output_y += gps_offset_lat * cos(pos_z_rad) + gps_offset_long * sin(pos_z_rad);
-    output_x += gps_offset_lat * sin(pos_z_rad) + gps_offset_long * cos(pos_z_rad);
-  }
+  //velocity_estimate_x += accel_x * 0.02;
+  //velocity_estimate_y += accel_y * 0.02;
   
   // Push data to motors
   set_velocities();

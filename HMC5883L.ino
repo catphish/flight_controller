@@ -1,7 +1,6 @@
 #include "RunningMedian.h"
 
 int16_t mx, my, mz;
-float h_tmp;
 
 void getHeading() {
   // Read raw heading measurements from device
@@ -15,15 +14,20 @@ void getHeading() {
   yh += 116;
   
   // To calculate heading in degrees. 0 degree indicates North
-  h_tmp = atan2(xh, yh);
+  pos_z_rad = atan2(xh, yh);
   
-  // Convert to degrees
-  heading = h_tmp * 1160000000 / (M_PI*2);
-
-  // Adjust for Dorset
-  heading -= 5574444.444444444;
+  // Rotate to magnetic north
+  pos_z_rad += M_PI;
+  
+  // Rotate to true north (Dorset)
+  pos_z_rad -= 0.030194196;
+  
+  // Convert to bigDegrees (This unit is the result of my gyro scale)
+  heading = pos_z_rad * 1160000000 / (M_PI*2);
   
   // Ensure reading is always positive positive
-  if(heading < 0) heading += 1160000000;
+  if(heading < 0)          heading += 1160000000;
+  if(heading > 1160000000) heading -= 1160000000;
+  
 }
 
